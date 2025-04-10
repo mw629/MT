@@ -48,9 +48,9 @@ float Lengeh(Vecto3 v)
 Vecto3 Normalize(Vecto3 v)
 {
 	Vecto3 result;
-	result.x = v.x / Norm(v);
-	result.y = v.y / Norm(v);
-	result.z = v.z / Norm(v);
+	result.x = v.x / Lengeh(v);
+	result.y = v.y / Lengeh(v);
+	result.z = v.z / Lengeh(v);
 	return result;
 }
 
