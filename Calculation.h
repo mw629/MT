@@ -97,6 +97,13 @@ float Dot(Vecto3 v1, Vecto3 v2);
 /// <returns>2つの行列の和</returns>
 Matrix4x4 AddMatrix4x4(Matrix4x4 m1, Matrix4x4 m2);
 
+/// <summary>
+/// この関数は、2つの行列の差を計算します。
+/// </summary>
+/// <param name="m1">行列1</param>
+/// <param name="m2">行列2</param>
+/// <returns>2つの行列の差</returns>
+Matrix4x4 SubtractMatrix(Matrix4x4 m1, Matrix4x4 m2);
 
 /// <summary>
 /// この関数は、2つの行列の積を計算します。
@@ -135,6 +142,11 @@ Matrix4x4 InverseMatrix4x4(Matrix4x4 m);
 /// <param name="m">行列</param>
 /// <returns>変換されたベクトル</returns>
 Vecto3 Transform(const Vecto3& v, const Matrix4x4& m);
+
+/// <summary>
+/// 単位行列を出します
+/// </summary>
+Matrix4x4 IdentityMatrix()
 
 
 ///アフィン行列
