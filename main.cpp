@@ -4,6 +4,14 @@
 
 const char kWindowTitle[] = "LC1A_27_ワタナベ_マサト";
 
+void VectorScreenPrintf(int x, int y, const Vecto3& vector, const char* label) {
+	static const int kColumnWidth = 60;
+	Novice::ScreenPrintf(x, y, "%.02f", vector.x);
+	Novice::ScreenPrintf(x + kColumnWidth, y, "%.02f", vector.y);
+	Novice::ScreenPrintf(x + kColumnWidth * 2, y, "%.02f", vector.z);
+	Novice::ScreenPrintf(x + kColumnWidth * 3, y, "%s", label);
+}
+
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
@@ -13,15 +21,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
 	char preKeys[256] = { 0 };
-
-
-	static const int kColumnWidth = 60;
-	void VectorScreenPrintf(int x, int y, const Vecto3 & vector, const char* label){
-		Novice::ScreenPrintf(x, y, "%.02f", vector.x);
-		Novice::ScreenPrintf(x + kColumnWidth, y, "%.02f", vector.y);
-		Novice::ScreenPrintf(x + kColumnWidth * 2, y, "%.02f", vector.z);
-		Novice::ScreenPrintf(x + kColumnWidth * 3, y, "%s", label);
-	}
 
 
 	Vecto3 v1 = {1.0f,3.0f,-5.0f};
@@ -50,7 +49,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		
 		add = AddVecto3(v1, v2);
 		subtract = SubtractVector3(v1, v2);
-		multiply = MultiplyVector3(v1, v2);
+		multiply = ScalarMultiply(v1, k);
 		dot = Dot(v1, v2);
 		length = Lengeh(v1);
 		normalize = Normalize(v2);
@@ -64,8 +63,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		
-
+		VectorScreenPrintf(0, 0, add, ":Add");
+		VectorScreenPrintf(0, 20, subtract, ":Subtrat");
+		VectorScreenPrintf(0, 40, multiply, ":Multiply");
+		Novice::ScreenPrintf(0, 60, "%.02f :Dot", dot);
+		Novice::ScreenPrintf(0, 80, "%.02f :Length", length);
+		VectorScreenPrintf(0, 100, normalize, ":normalize");
 
 		///
 		/// ↑描画処理ここまで
