@@ -69,7 +69,7 @@ Vecto3 ScalarMultiply(Vecto3 v, float s);
 /// </summary>
 /// <param name="v">ベクトル</param>
 /// <returns>ベクトルの長さ</returns>
-float Norm(Vecto3 v);
+float Lengeh(Vecto3 v);
 
 /// <summary>
 /// この関数は、ベクトルを正規化します。
