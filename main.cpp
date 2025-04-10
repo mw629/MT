@@ -3,11 +3,12 @@
 
 static const int kRowHeight = 20;
 static const int kColimnWidth = 60;
-void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix,) {
-	for (int row = 0; row < 4; ++row) {
+void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label) {
+	Novice::ScreenPrintf(x, y, "%s", label);
+	for (int row = 1; row < 5; ++row) {
 		for (int column = 0; column < 4; ++column) {
 			Novice::ScreenPrintf(
-				x + column * kColimnWidth, y + row * kRowHeight, "%6.02f", matrix.m[row][column]);
+				x + column * kColimnWidth, y + row * kRowHeight, "%6.02f", matrix.m[row-1][column]);
 		}
 	}
 }
@@ -34,7 +35,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		4.1f,6.5f,3.3f,2.2f,
 		8.8f,0.6f,9.9f,7.7f,
 		1.1f,5.5f,6.6f,0.0f,
-		3.3f,9.9f,8.8f,2.2f};
+		3.3f,9.9f,8.8f,2.2f };
 
 
 
@@ -50,12 +51,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓更新処理ここから
 		///
-		
+
 		Matrix4x4 add = AddMatrix4x4(m1, m2);
 		Matrix4x4 multiply = MultiplyMatrix4x4(m1, m2);
 		Matrix4x4 subtract = SubtractMatrix(m1, m2);
-		Matrix4x4 inversM1 = InverseMatrix4x4(m1);
-		Matrix4x4 inversM2 = InverseMatrix4x4(m2);
+		Matrix4x4 inverseM1 = InverseMatrix4x4(m1);
+		Matrix4x4 inverseM2 = InverseMatrix4x4(m2);
 		Matrix4x4 transposeM1 = TransposeMatrix4x4(m1);
 		Matrix4x4 transposeM2 = TransposeMatrix4x4(m2);
 		Matrix4x4 identity = IdentityMatrix();
@@ -69,6 +70,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		MatrixScreenPrintf(0, 0, add, "Add");
+		MatrixScreenPrintf(0, kRowHeight * 6, subtract, "Subtract");
+		MatrixScreenPrintf(0, kRowHeight * 6 * 2, multiply, "Multiply");
+		MatrixScreenPrintf(0, kRowHeight * 6 * 3, inverseM1, "inverseM1");
+		MatrixScreenPrintf(0, kRowHeight * 6 * 4, inverseM2, "inverseM2");
+		MatrixScreenPrintf(kColimnWidth * 5, 0, transposeM1, "transposeM1");
+		MatrixScreenPrintf(kColimnWidth * 5, kRowHeight * 6, transposeM2, "transposeM2");
+		MatrixScreenPrintf(kColimnWidth * 5, kRowHeight * 6 * 2, identity, "identity");
+
 
 		///
 		/// ↑描画処理ここまで

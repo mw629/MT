@@ -146,7 +146,7 @@ Vecto3 Transform(const Vecto3& v, const Matrix4x4& m);
 /// <summary>
 /// 単位行列を出します
 /// </summary>
-Matrix4x4 IdentityMatrix()
+Matrix4x4 IdentityMatrix();
 
 
 ///アフィン行列

@@ -246,6 +246,7 @@ Matrix4x4 IdentityMatrix()
 		0.0f,1.0f,0.0f,0.0f,
 		0.0f,0.0f,1.0f,0.0f,
 		0.0f,0.0f,0.0f,1.0f };
+	return m;
 }
 
 Matrix4x4 Scale(Vecto3 scall)
