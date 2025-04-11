@@ -16,35 +16,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char preKeys[256] = { 0 };
 
 
-	
-	Vecto3 cameraPos = { 0.0f, 0.0f, 0.0f};
-	Matrix4x4 cameraMatrix;
-
-	Matrix4x4 viewMatrix;
-	Matrix4x4 projectionMatrix;
-	Matrix4x4 worldViewProjectionMatrix;
-	Matrix4x4 viewportMatrix;
-
-	Vecto3 pos = { 0.0f,0.0f,0.0f };//1.0f,-400.0f,100.0f
-	Vecto3 kLocalVertices[3] =
-	{
-		{10.0f,10.0f,0.0f},
-		{30.0f,10.0f,0.0f},
-		{20.0f,30.0f,0.0f}
-	};
-	Matrix4x4 WorldMatrix;
-
-	// 垂直方向視野角
-	float fovAngleY = 90.0f;
-	// ビューポートのアスペクト比
-	float aspectRatio = (float)720 / 1280;
-	// 深度限界（手前側）
-	float nearZ = 0.1f;
-	// 深度限界（奥側）
-	float farZ = 1.0f;
-
-
-
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
 		// フレームの開始
@@ -56,16 +27,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		///
 		/// ↓更新処理ここから
-		///
-	
-
-
-		///
-		/// ↑更新処理ここまで
-		///
-
-		///
-		/// ↓描画処理ここから
 		///
 
 		Vecto3 translate{ 4.1f,2.6f,0.8f };
@@ -79,6 +40,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			1.0f,4.0f,2.0f,3.0f,
 			2.0f,2.0f,1.0f,3.0f, };
 		Vecto3 tranformed = Transform(point, transformMatrix);
+
+		///
+		/// ↑更新処理ここまで
+		///
+
+		///
+		/// ↓描画処理ここから
+		///
+
+		
 
 		///
 		/// ↑描画処理ここまで
