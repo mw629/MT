@@ -47,6 +47,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 		
+		Vecto3 rotate{ 0.4f,1.43f,-0.8f };
+		Matrix4x4 rotetaXMatrix = RotationX(rotate.x);
+		Matrix4x4 rotetaYMatrix = RotationY(rotate.y);
+		Matrix4x4 rotetaZMatrix = RotationZ(rotate.z);
+		Matrix4x4 rotetaXYZMatrix = Rotation(rotate);
 
 		///
 		/// ↑更新処理ここまで
@@ -56,7 +61,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		
+		MatrixScreenPrintf(0, 0, rotetaXMatrix, "rotetaXMatrix");
+		MatrixScreenPrintf(0, kRowHeight*5, rotetaYMatrix, "rotetaYMatrix");
+		MatrixScreenPrintf(0, kRowHeight * 5*2, rotetaZMatrix, "rotetaZMatrix");
+		MatrixScreenPrintf(0, kRowHeight * 5*3, rotetaXYZMatrix, "rotetaXYZMatrix");
 
 		///
 		/// ↑描画処理ここまで
