@@ -87,9 +87,9 @@ Matrix4x4 MultiplyMatrix4x4(Matrix4x4 m1, Matrix4x4 m2)//o
 		{
 			result.m[i][j]
 				= m1.m[i][0] * m2.m[0][j]
-				+ m1.m[i][1] * m2.m[1][j]
-				+ m1.m[i][2] * m2.m[2][j]
-				+ m1.m[i][3] * m2.m[3][j];
+					+ m1.m[i][1] * m2.m[1][j]
+						+ m1.m[i][2] * m2.m[2][j]
+							+ m1.m[i][3] * m2.m[3][j];
 		}
 	}
 	return result;
@@ -245,7 +245,7 @@ Matrix4x4 RotationX(float angle)
 	result.m[1][1] = std::cos(angle);
 	result.m[1][2] = std::sin(angle);
 	result.m[2][1] = std::sin(-angle);
-	result.m[2][2] =std::cos(angle);
+	result.m[2][2] = std::cos(angle);
 	result.m[3][3] = 1.0f;
 	return result;
 }
@@ -303,13 +303,22 @@ Matrix4x4 MakeAffineMatrix(Vecto3 pos, Vecto3 scale, Vecto3 angle)
 	Matrix4x4 rotationMatrix = Rotation(angle);
 	Matrix4x4 translationMatrix = Translation(pos);
 
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			result.m[i][j] = scaleMatrix.m[i][j] * rotationMatrix.m[i][j] + translationMatrix.m[i][j];
-		}
-	}
+	result.m[0][0] = scaleMatrix.m[0][0] * rotationMatrix.m[0][0];
+	result.m[0][1] = scaleMatrix.m[0][0] * rotationMatrix.m[0][1];
+	result.m[0][2] = scaleMatrix.m[0][0] * rotationMatrix.m[0][2];
+
+	result.m[1][0] = scaleMatrix.m[1][1] * rotationMatrix.m[1][0];
+	result.m[1][1] = scaleMatrix.m[1][1] * rotationMatrix.m[1][1];
+	result.m[1][2] = scaleMatrix.m[1][1] * rotationMatrix.m[1][2];
+
+	result.m[2][0] = scaleMatrix.m[2][2] * rotationMatrix.m[2][0];
+	result.m[2][1] = scaleMatrix.m[2][2] * rotationMatrix.m[2][1];
+	result.m[2][2] = scaleMatrix.m[2][2] * rotationMatrix.m[2][2];
+
+	result.m[3][0] = translationMatrix.m[3][0];
+	result.m[3][1] = translationMatrix.m[3][1];
+	result.m[3][2] = translationMatrix.m[3][2];
+	result.m[3][3] = 1.0f;
 
 	return result;
 }

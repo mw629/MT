@@ -47,6 +47,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 		
+		Vecto3 scale{ 1.2f,0.79f,-2.1f };
+		Vecto3 rotate{ 0.4f,1.43f,-0.8f };
+		Vecto3 translate{ 2.7f,-4.15f,1.57f };
+		Matrix4x4 worldMatrix = MakeAffineMatrix(translate, scale, rotate);
 
 		///
 		/// ↑更新処理ここまで
@@ -56,7 +60,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		
+		MatrixScreenPrintf(0, 0, worldMatrix, "worldMatrix");
 
 		///
 		/// ↑描画処理ここまで
