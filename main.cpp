@@ -57,26 +57,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓更新処理ここから
 		///
-		
-
-
-		WorldMatrix = MakeAffineMatrix(pos, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
-		cameraMatrix = MakeAffineMatrix(cameraPos, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
-
-		viewMatrix = InverseMatrix4x4(cameraMatrix);
-		projectionMatrix = MakePerspectiveFovMatrix(fovAngleY, aspectRatio, nearZ, farZ);
-
-		worldViewProjectionMatrix = MultiplyMatrix4x4(WorldMatrix, MultiplyMatrix4x4(viewMatrix, projectionMatrix));
-
-		viewportMatrix = MakeViewPortMatrix(1280.0f, 720.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-
-		Vecto3 screenVertice[3];
-
-		for (int i = 0; i < 3; i++) {
-			Vecto3 ndcVertice = Transform(kLocalVertices[i], worldViewProjectionMatrix);
-			screenVertice[i] = Transform(ndcVertice, viewportMatrix);
-		}
-
+	
 
 
 		///
@@ -87,19 +68,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		Novice::DrawTriangle(
-			static_cast<int>(screenVertice[0].x), static_cast<int>(screenVertice[0].y),
-			static_cast<int>(screenVertice[1].x), static_cast<int>(screenVertice[1].y),
-			static_cast<int>(screenVertice[2].x), static_cast<int>(screenVertice[2].y),
-			0xFFFFFFFF, kFillModeSolid);
-
-		for (int i = 0; i < 3; i++)
-		{
-			Novice::ScreenPrintf(10, 10 + i * 20, "screenVertice[%d] = (%f, %f)", i, screenVertice[i].x, screenVertice[i].y);
-		}
-
-
-
+		Vecto3 translate{ 4.1f,2.6f,0.8f };
+		Vecto3 scale{ 1.5f,5.2f,7.3f };
+		Matrix4x4 translateMatrix = Translation(translate);
+		Matrix4x4 scaleMatrix = Scale(scale);
+		Vecto3 point{ 2.3f,3.8f,1.4f };
+		Matrix4x4 transformMatrix = {
+			1.0f,2.0f,3.0f,4.0f,
+			3.0f,1.0f,1.0f,2.0f,
+			1.0f,4.0f,2.0f,3.0f,
+			2.0f,2.0f,1.0f,3.0f, };
+		Vecto3 tranformed = Transform(point, transformMatrix);
 
 		///
 		/// ↑描画処理ここまで
