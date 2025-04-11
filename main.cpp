@@ -1,7 +1,16 @@
 #include <Novice.h>
 #include "Calculation.h"
 
-
+static const int kRowHeight = 20;
+static const int kColimnWidth = 60;
+void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label) {
+	Novice::ScreenPrintf(x, y, "%s", label);
+	for (int row = 1; row < 5; ++row) {
+		for (int column = 0; column < 4; ++column) {
+			Novice::ScreenPrintf(
+				x + column * kColimnWidth, y + row * kRowHeight, "%6.02f", matrix.m[row - 1][column]);
+		}
+	}
 
 const char kWindowTitle[] = "LC1A_27_ワタナベ_マサト";
 
