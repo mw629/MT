@@ -314,7 +314,7 @@ Matrix4x4 MakeAffineMatrix(Vecto3 pos, Vecto3 scale, Vecto3 angle)
 	return result;
 }
 
-Matrix4x4 MakeOrthographicMatrix(float l, float r, float t, float b, float zn, float zf)
+Matrix4x4 MakeOrthographicMatrix(float l, float t, float r, float b, float zn, float zf)
 {
 	Matrix4x4 result;
 	result.m[0][0] = 2.0f / (r - l);
@@ -330,15 +330,15 @@ Matrix4x4 MakeOrthographicMatrix(float l, float r, float t, float b, float zn, f
 Matrix4x4 MakePerspectiveFovMatrix(float fovY, float a, float zn, float zf)
 {
 	Matrix4x4 result;
-	result.m[0][0] = static_cast<float>(1.0f / a * (1.0f / tan(fovY / 2.0f)));
-	result.m[1][1] = static_cast<float>(1.0f / tan(fovY / 2.0f));
+	result.m[0][0] = static_cast<float>(1.0f / a * (1.0f / std::tan(fovY / 2.0f)));
+	result.m[1][1] = static_cast<float>(1.0f / std::tan(fovY / 2.0f));
 	result.m[2][2] = static_cast<float>(zf / (zf - zn));
 	result.m[2][3] = 1.0f;
 	result.m[3][2] = static_cast<float>(-zn * zf / (zf - zn));
 	return result;
 }
 
-Matrix4x4 MakeViewPortMatrix(float width, float height, float left, float top, float minD, float maxD)
+Matrix4x4 MakeViewPortMatrix(float left, float top, float width, float height, float minD, float maxD)
 {
 	Matrix4x4 result;
 	result.m[0][0] = width / 2.0f;
