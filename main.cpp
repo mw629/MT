@@ -77,10 +77,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHight), 0.1f, 100.0f);
 		worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, MultiplyMatrix4x4(viewMatrix, projectionMatrix));
 		viewMatrix = MakeViewPortMatrix(0, 0, float(kWindowWidth), float(kWindowHight), 0.0f, 1.0f);
-		for (int i = 0; i < 3; ++i) {
-			ndcVertex = Transform(kLocalVertices[i], worldViewProjectiveMatrix);
-			screenVertices[i] = Transform(ndcVertex, viewportMatrix);
-		}
+		//for (int i = 0; i < 3; ++i) {
+			ndcVertex = Transform(kLocalVertices[0], worldViewProjectiveMatrix);
+
+			//screenVertices[i] = Transform(ndcVertex, viewportMatrix);
+		//}
 
 
 		///
@@ -91,10 +92,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		Novice::DrawTriangle(static_cast<int>(screenVertices[0].x), static_cast<int>(screenVertices[0].y),
+		/*Novice::DrawTriangle(static_cast<int>(screenVertices[0].x), static_cast<int>(screenVertices[0].y),
 			static_cast<int>(screenVertices[1].x), static_cast<int>(screenVertices[1].y),
 			static_cast<int>(screenVertices[2].x), static_cast<int>(screenVertices[2].y),
-			WHITE, kFillModeSolid);
+			WHITE, kFillModeSolid);*/
+
+		VectorScreenPrintf(0, 0, ndcVertex,":n");
+		MatrixScreenPrintf(0, 20, viewportMatrix, "v");
 
 		///
 		/// ↑描画処理ここまで
