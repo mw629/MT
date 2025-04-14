@@ -51,12 +51,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Matrix4x4 viewportMatrix;
 	Vecto3 screenVertices[3];
 
-	Vecto3 ndcVertex;
+	Vecto3 ndcVertex[3];
 
 	Vecto3 kLocalVertices[3] = {
-		{0.0f,10.0f,1.0f},
-		{-5.0f,0.0f,1.0f},
-		{5.0f,0.0f,1.0f}
+		{0.0f,10.0f,0.0f},
+		{-5.0f,0.0f,0.0f},
+		{5.0f,0.0f,0.0f}
 	};
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -76,12 +76,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		viewMatrix = InverseMatrix4x4(cameraMatrix);
 		projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHight), 0.1f, 100.0f);
 		worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, MultiplyMatrix4x4(viewMatrix, projectionMatrix));
-		viewMatrix = MakeViewPortMatrix(0, 0, float(kWindowWidth), float(kWindowHight), 0.0f, 1.0f);
-		//for (int i = 0; i < 3; ++i) {
-			ndcVertex = Transform(kLocalVertices[0], worldViewProjectiveMatrix);
-
-			//screenVertices[i] = Transform(ndcVertex, viewportMatrix);
-		//}
+		viewportMatrix = MakeViewPortMatrix(0, 0, float(kWindowWidth), float(kWindowHight), 0.0f, 1.0f);
+		for (int i = 0; i < 3; ++i) {
+			ndcVertex[i] = Transform(kLocalVertices[0], worldViewProjectiveMatrix);
+			screenVertices[i] = Transform(ndcVertex[i], viewportMatrix);
+		}
 
 
 		///
@@ -92,13 +91,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		/*Novice::DrawTriangle(static_cast<int>(screenVertices[0].x), static_cast<int>(screenVertices[0].y),
+		Novice::DrawTriangle(static_cast<int>(screenVertices[0].x), static_cast<int>(screenVertices[0].y),
 			static_cast<int>(screenVertices[1].x), static_cast<int>(screenVertices[1].y),
 			static_cast<int>(screenVertices[2].x), static_cast<int>(screenVertices[2].y),
-			WHITE, kFillModeSolid);*/
+			WHITE, kFillModeSolid);
 
-		VectorScreenPrintf(0, 0, ndcVertex,":n");
-		MatrixScreenPrintf(0, 20, viewportMatrix, "v");
+		MatrixScreenPrintf(0,0, worldViewProjectiveMatrix,"worldViewProjectiveMatrix");
 
 		///
 		/// ↑描画処理ここまで
