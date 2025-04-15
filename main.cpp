@@ -35,6 +35,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char keys[256] = { 0 };
 	char preKeys[256] = { 0 };
 
+	Vector3 v1{ 1.2f,-3.9f,2.5f };
+	Vector3 v2{ 2.8f,0.4f,-1.3f };
+	Vector3 cross = Cross(v1, v2);
+
+
 
 	Vector3 cameraPos = { 1.0f,1.0f,1.0f };
 	Vector3 cameraRotate = { 0.0f,0.0f,0.0f };
@@ -73,7 +78,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
-		
+		cameraRotate.x += 0.1f;
 
 		worldMatrix = MakeAffineMatrix(pos, scale, rotate);
 		cameraMatrix = MakeAffineMatrix(cameraPos, cameraScale, cameraRotate);
@@ -98,11 +103,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Novice::DrawTriangle(static_cast<int>(screenVertices[0].x), static_cast<int>(screenVertices[0].y),
 			static_cast<int>(screenVertices[1].x), static_cast<int>(screenVertices[1].y),
 			static_cast<int>(screenVertices[2].x), static_cast<int>(screenVertices[2].y),
-			WHITE, kFillModeSolid);
-		Novice::DrawBox(0, 0, 300, 60, 0.0f, BLACK, kFillModeSolid);
-		for (int i = 0; i < 3; i++) {
-			VectorScreenPrintf(0, 20 * i, screenVertices[i], "");
-		}
+			RED, kFillModeSolid);
+		
+		VectorScreenPrintf(0, 0, cross, ":Cross");
+		
 		///
 		/// ↑描画処理ここまで
 		///

@@ -93,7 +93,7 @@ float Dot(Vector3 v1, Vector3 v2);
 /// <param name="v1">ベクトル1</param>
 /// <param name="v2">ベクトル2</param>
 /// <returns>クロス積(外積)の結果</returns>
-Vector3 Cross(const Vector3& v1, const Vector3& v2)
+Vector3 Cross(const Vector3& v1, const Vector3& v2);
 
 //行列の計算
 
