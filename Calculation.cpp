@@ -315,13 +315,22 @@ Matrix4x4 MakeAffineMatrix(Vector3 pos, Vector3 scale, Vector3 angle)
 	Matrix4x4 rotationMatrix = Rotation(angle);
 	Matrix4x4 translationMatrix = Translation(pos);
 
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			result.m[i][j] = scaleMatrix.m[i][j] * rotationMatrix.m[i][j] + translationMatrix.m[i][j];
-		}
-	}
+	result.m[0][0] = scaleMatrix.m[0][0] * rotationMatrix.m[0][0];
+	result.m[0][1] = scaleMatrix.m[0][0] * rotationMatrix.m[0][1];
+	result.m[0][2] = scaleMatrix.m[0][0] * rotationMatrix.m[0][2];
+
+	result.m[1][0] = scaleMatrix.m[1][1] * rotationMatrix.m[1][0];
+	result.m[1][1] = scaleMatrix.m[1][1] * rotationMatrix.m[1][1];
+	result.m[1][2] = scaleMatrix.m[1][1] * rotationMatrix.m[1][2];
+
+	result.m[2][0] = scaleMatrix.m[2][2] * rotationMatrix.m[2][0];
+	result.m[2][1] = scaleMatrix.m[2][2] * rotationMatrix.m[2][1];
+	result.m[2][2] = scaleMatrix.m[2][2] * rotationMatrix.m[2][2];
+
+	result.m[3][0] = translationMatrix.m[3][0];
+	result.m[3][1] = translationMatrix.m[3][1];
+	result.m[3][2] = translationMatrix.m[3][2];
+	result.m[3][3] = 1.0f;
 
 	return result;
 }

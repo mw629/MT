@@ -58,7 +58,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Matrix4x4 viewportMatrix;
 	Vector3 screenVertices[3];
 
-	Vector3 ndcVertex;
+	Vector3 ndcVertex[3];
 
 	Vector3 kLocalVertices[3] = {
 		{0.0f,5.0f,1.0f},
@@ -78,17 +78,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
-		rotate.y += 0.1f;
+		//rotate.y += 0.1f;
 
 		worldMatrix = MakeAffineMatrix(pos, scale, rotate);
 		cameraMatrix = MakeAffineMatrix(cameraPos, cameraScale, cameraRotate);
 		viewMatrix = InverseMatrix4x4(cameraMatrix);
 		projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHight), 0.1f, 100.0f);
 		worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, MultiplyMatrix4x4(viewMatrix, projectionMatrix));
-		viewportMatrix = MakeViewPortMatrix(1.0f, 1.0f, 640, 360, 0.0f, 1.0f);
+		viewportMatrix = MakeViewPortMatrix(0, 0, 1280.0f, 720.0f, 0.0f, 1.0f);
 		for (int i = 0; i < 3; ++i) {
-			ndcVertex = Transform(kLocalVertices[i], worldViewProjectiveMatrix);
-			screenVertices[i] = Transform(ndcVertex, viewportMatrix);
+			ndcVertex[i] = Transform(kLocalVertices[i], worldViewProjectiveMatrix);
+			screenVertices[i] = Transform(ndcVertex[i], viewportMatrix);
 		}
 
 
@@ -104,16 +104,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			static_cast<int>(screenVertices[1].x), static_cast<int>(screenVertices[1].y),
 			static_cast<int>(screenVertices[2].x), static_cast<int>(screenVertices[2].y),
 			RED, kFillModeSolid);
-		
+
 		VectorScreenPrintf(0, 0, cross, ":Cross");
-	 
+
 		for (int i = 0; i < 3; i++) {
-			VectorScreenPrintf(0, 20 + 20 * i, screenVertices[i], "");
+			VectorScreenPrintf(0, 30 + 70 * i, kLocalVertices[i], "kLo");
+			VectorScreenPrintf(0, 50 + 70 * i, ndcVertex[i], "ndc");
+			VectorScreenPrintf(0, 70 + 70 * i, screenVertices[i], "screen");
 		}
+		MatrixScreenPrintf(0, 250, worldViewProjectiveMatrix, "mvp");
+		MatrixScreenPrintf(0, 350, viewportMatrix, "vp");
 
 
 
-		
+
 		///
 		/// ↑描画処理ここまで
 		///
