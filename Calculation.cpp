@@ -220,7 +220,7 @@ Vecto3 Transform(const Vecto3& v, const Matrix4x4& m)
 	result.y = v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1] + m.m[3][1];
 	result.z = v.x * m.m[0][2] + v.y * m.m[1][2] + v.z * m.m[2][2] + m.m[3][2];
 	float w = v.x * m.m[0][3] + v.y * m.m[1][3] + v.z * m.m[2][3] + m.m[3][3];
-	//assert(w != 0);
+	assert(w != 0);
 	result.x /= w;
 	result.y /= w;
 	result.z /= w;
