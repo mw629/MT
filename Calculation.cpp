@@ -1,9 +1,32 @@
+#include <Novice.h>
 #include "Calculation.h"
 //#include <math.h>
 #include <cmath>
 #include "assert.h"
 
 
+
+//行列、ベクトルの描画
+
+static const int kRowHeight = 20;
+static const int kColimnWidth = 60;
+
+void VectorScreenPrintf(int x, int y, const Vecto3& vector, const char* label) {
+	Novice::ScreenPrintf(x, y, "%.02f", vector.x);
+	Novice::ScreenPrintf(x + kColimnWidth, y, "%.02f", vector.y);
+	Novice::ScreenPrintf(x + kColimnWidth * 2, y, "%.02f", vector.z);
+	Novice::ScreenPrintf(x + kColimnWidth * 3, y, "%s", label);
+}
+
+void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label) {
+	Novice::ScreenPrintf(x, y, "%s", label);
+	for (int row = 1; row < 5; ++row) {
+		for (int column = 0; column < 4; ++column) {
+			Novice::ScreenPrintf(
+				x + column * kColimnWidth, y + row * kRowHeight, "%6.02f", matrix.m[row - 1][column]);
+		}
+	}
+}
 
 
 

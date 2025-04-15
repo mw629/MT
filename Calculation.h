@@ -28,6 +28,12 @@ struct Matrix4x4 {
 
 };
 
+//行列、ベクトルの描画
+
+void VectorScreenPrintf(int x, int y, const Vecto3& vector, const char* label);
+
+void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label);
+
 
 //三次元ベクトルの計算
 
