@@ -2,7 +2,7 @@
 #include "Calculation.h"
 
 static const int kRowHeight = 20;
-static const int kColimnWidth = 60;
+static const int kColimnWidth = 80;
 static const int kWindowWidth = 1280;
 static const int kWindowHight = 720;
 
@@ -38,7 +38,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Vecto3 cameraPos = { 1.0f,1.0f,1.0f };
 
-	Vecto3 pos = { 1.0f,1.0f,100.0f };
+	Vecto3 pos = { 1.0f,1.0f,1.0f };
 	Vecto3 rotate = { 0.0f,0.0f,0.0f };
 	Vecto3 scale = { 1.0f,1.0f,1.0f };
 
@@ -70,18 +70,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓更新処理ここから
 		///
-		
+
 		/*rotate.x += 0.1f;
 		rotate.z += 0.1f;
 		rotate.y += 0.1f;*/
 		
+		//scale.x += 0.1f;
+		//scale.y += 0.1f;
+		scale.z += 0.1f;
+
 
 		worldMatrix = MakeAffineMatrix(pos, scale, rotate);
 		cameraMatrix = MakeAffineMatrix(cameraPos, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
 		viewMatrix = InverseMatrix4x4(cameraMatrix);
 		projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHight), 0.1f, 100.0f);
 		worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, MultiplyMatrix4x4(viewMatrix, projectionMatrix));
-		viewportMatrix = MakeViewPortMatrix(float(kWindowWidth), float(kWindowHight), 0, 0, 0.0f, 1.0f);
+		viewportMatrix = MakeViewPortMatrix(float(kWindowWidth)/100.0f, float(kWindowHight) / 100.0f, 640, 360, 0.0f, 1.0f);
 		for (int i = 0; i < 3; ++i) {
 			ndcVertex = Transform(kLocalVertices[i], worldViewProjectiveMatrix);
 			screenVertices[i] = Transform(ndcVertex, viewportMatrix);
@@ -100,9 +104,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			static_cast<int>(screenVertices[1].x), static_cast<int>(screenVertices[1].y),
 			static_cast<int>(screenVertices[2].x), static_cast<int>(screenVertices[2].y),
 			WHITE, kFillModeSolid);
-
-
-
+		Novice::DrawBox(0, 0, 300, 60, 0.0f, BLACK, kFillModeSolid);
+		for (int i = 0; i < 3; i++) {
+			VectorScreenPrintf(0, 20 * i, screenVertices[i], "");
+		}
 		///
 		/// ↑描画処理ここまで
 		///

@@ -221,8 +221,8 @@ Matrix4x4 MakePerspectiveFovMatrix(float fovY, float a, float zn, float zf);
 /// <param name="height">高さ</param>
 /// <param name="left">左</param>
 /// <param name="top">上</param>
-/// <param name="zn">最小深度値</param>
-/// <param name="zf">最大深度値</param>
+/// <param name="minD">最小深度値</param>
+/// <param name="maxD">最大深度値</param>
 /// <returns>ビューポート行列</returns>
 Matrix4x4 MakeViewPortMatrix(float width, float height, float left, float top, float minD, float maxD);
 
