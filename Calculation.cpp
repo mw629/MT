@@ -3,65 +3,71 @@
 #include <cmath>
 #include "assert.h"
 
+
+
+
+
+
 // ベクトル
 
-Vecto3 AddVecto3(Vecto3 v1, Vecto3 v2)
+Vector3 AddVector3(Vector3 v1, Vector3 v2)
 {
-	Vecto3 result;
+	Vector3 result;
 	result.x = v1.x + v2.x;
 	result.y = v1.y + v2.y;
 	result.z = v1.z + v2.z;
 	return result;
 }
 
-Vecto3 SubtractVector3(Vecto3 v1, Vecto3 v2)
+Vector3 SubtractVector3(Vector3 v1, Vector3 v2)
 {
-	Vecto3 result;
+	Vector3 result;
 	result.x = v1.x - v2.x;
 	result.y = v1.y - v2.y;
 	result.z = v1.z - v2.z;
 	return result;
 }
 
-Vecto3 MultiplyVector3(Vecto3 v1, Vecto3 v2)
+Vector3 MultiplyVector3(Vector3 v1, Vector3 v2)
 {
-	Vecto3 result;
+	Vector3 result;
 	result.x = v1.x * v2.x;
 	result.y = v1.y * v2.y;
 	result.z = v1.z * v2.z;
 	return result;
 }
 
-Vecto3 ScalarMultiply(Vecto3 v, float s)
+Vector3 ScalarMultiply(Vector3 v, float s)
 {
-	Vecto3 result;
+	Vector3 result;
 	result = { v.x * s,v.y * s,v.z * s };
 	return result;
 }
 
-float Lengeh(Vecto3 v)
+float Lengeh(Vector3 v)
 {
 	float result;
 	result = static_cast<float>(sqrt(v.x * v.x + v.y * v.y + v.z * v.z));
 	return result;
 }
 
-Vecto3 Normalize(Vecto3 v)
+Vector3 Normalize(Vector3 v)
 {
-	Vecto3 result;
+	Vector3 result;
 	result.x = v.x / Lengeh(v);
 	result.y = v.y / Lengeh(v);
 	result.z = v.z / Lengeh(v);
 	return result;
 }
 
-float Dot(Vecto3 v1, Vecto3 v2)
+float Dot(Vector3 v1, Vector3 v2)
 {
 	float result;
 	result = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 	return result;
 }
 
+Vector3 Cross(const Vector3& v1, const Vector3& v2);
 
 // 行列
 
@@ -212,9 +218,9 @@ Matrix4x4 ScaleMultiplyMatrix4x4(Matrix4x4 m, float s)
 	return result;
 }
 
-Vecto3 Transform(const Vecto3& v, const Matrix4x4& m)
+Vector3 Transform(const Vector3& v, const Matrix4x4& m)
 {
-	Vecto3 result;
+	Vector3 result;
 
 	result.x = v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0] + m.m[3][0];
 	result.y = v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1] + m.m[3][1];
@@ -227,7 +233,7 @@ Vecto3 Transform(const Vecto3& v, const Matrix4x4& m)
 	return result;
 }
 
-Matrix4x4 Scale(Vecto3 scall)
+Matrix4x4 Scale(Vector3 scall)
 {
 	Matrix4x4 result;
 
@@ -274,14 +280,14 @@ Matrix4x4 RotationZ(float angle)
 	return result;
 }
 
-Matrix4x4 Rotation(Vecto3 angle)
+Matrix4x4 Rotation(Vector3 angle)
 {
 	Matrix4x4 result;
 	result = MultiplyMatrix4x4(RotationX(angle.x), MultiplyMatrix4x4(RotationY(angle.y), RotationZ(angle.z)));
 	return result;
 }
 
-Matrix4x4 Translation(Vecto3 pos)
+Matrix4x4 Translation(Vector3 pos)
 {
 	Matrix4x4 result;
 	result.m[0][0] = 1.0f;
@@ -296,7 +302,7 @@ Matrix4x4 Translation(Vecto3 pos)
 	return result;
 }
 
-Matrix4x4 MakeAffineMatrix(Vecto3 pos, Vecto3 scale, Vecto3 angle)
+Matrix4x4 MakeAffineMatrix(Vector3 pos, Vector3 scale, Vector3 angle)
 {
 	Matrix4x4 result;
 	Matrix4x4 scaleMatrix = Scale(scale);

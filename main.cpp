@@ -6,7 +6,7 @@ static const int kColimnWidth = 80;
 static const int kWindowWidth = 1280;
 static const int kWindowHight = 720;
 
-void VectorScreenPrintf(int x, int y, const Vecto3& vector, const char* label) {
+void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label) {
 	Novice::ScreenPrintf(x, y, "%.02f", vector.x);
 	Novice::ScreenPrintf(x + kColimnWidth, y, "%.02f", vector.y);
 	Novice::ScreenPrintf(x + kColimnWidth * 2, y, "%.02f", vector.z);
@@ -36,13 +36,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char preKeys[256] = { 0 };
 
 
-	Vecto3 cameraPos = { 1.0f,1.0f,1.0f };
-	Vecto3 cameraRotate = { 0.0f,0.0f,0.0f };
-	Vecto3 cameraScale = { 1.0f,1.0f,1.0f };
+	Vector3 cameraPos = { 1.0f,1.0f,1.0f };
+	Vector3 cameraRotate = { 0.0f,0.0f,0.0f };
+	Vector3 cameraScale = { 1.0f,1.0f,1.0f };
 
-	Vecto3 pos = { 1.0f,1.0f,1.0f };
-	Vecto3 rotate = { 0.0f,0.0f,0.0f };
-	Vecto3 scale = { 1.0f,1.0f,1.0f };
+	Vector3 pos = { 1.0f,1.0f,1.0f };
+	Vector3 rotate = { 0.0f,0.0f,0.0f };
+	Vector3 scale = { 1.0f,1.0f,1.0f };
 
 
 	Matrix4x4 worldMatrix;
@@ -51,11 +51,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Matrix4x4 projectionMatrix;
 	Matrix4x4 worldViewProjectiveMatrix;
 	Matrix4x4 viewportMatrix;
-	Vecto3 screenVertices[3];
+	Vector3 screenVertices[3];
 
-	Vecto3 ndcVertex;
+	Vector3 ndcVertex;
 
-	Vecto3 kLocalVertices[3] = {
+	Vector3 kLocalVertices[3] = {
 		{0.0f,5.0f,1.0f},
 		{-5.0f,-5.0f,1.0f},
 		{5.0f,-5.0f,1.0f}

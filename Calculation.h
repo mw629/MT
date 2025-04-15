@@ -1,21 +1,21 @@
 
 ///変数型
 
-struct Vecto3 {
+struct Vector3 {
 	float x;
 	float y;
 	float z;
 	float w = 1.0f;
 
-	Vecto3 operator+(const Vecto3& other) { return { x + other.x, y + other.y,z + other.z }; }
-	Vecto3 operator-(const Vecto3& other) { return { x - other.x, y - other.y,z - other.z }; }
-	Vecto3 operator*(float other) const { return { x * other, y * other,z * other }; }
-	Vecto3 operator/(const Vecto3& other) { return { x / other.x, y / other.y ,z / other.z }; }
-	Vecto3 operator=(const Vecto3& other) { return { x = other.x, y = other.y,z = other.z }; }
-	Vecto3 operator+=(const Vecto3& other) { return { x += other.x, y += other.y,z+= other.z }; }
-	Vecto3 operator-=(const Vecto3& other) { return { x -= other.x, y -= other.y,z -= other.z }; }
-	Vecto3 operator*=(const Vecto3& other) { return { x *= other.x, y *= other.y,z *= other.z }; }
-	Vecto3 operator/=(const Vecto3& other) { return { x /= other.x, y /= other.y,z /= other.z }; }
+	Vector3 operator+(const Vector3& other) { return { x + other.x, y + other.y,z + other.z }; }
+	Vector3 operator-(const Vector3& other) { return { x - other.x, y - other.y,z - other.z }; }
+	Vector3 operator*(float other) const { return { x * other, y * other,z * other }; }
+	Vector3 operator/(const Vector3& other) { return { x / other.x, y / other.y ,z / other.z }; }
+	Vector3 operator=(const Vector3& other) { return { x = other.x, y = other.y,z = other.z }; }
+	Vector3 operator+=(const Vector3& other) { return { x += other.x, y += other.y,z+= other.z }; }
+	Vector3 operator-=(const Vector3& other) { return { x -= other.x, y -= other.y,z -= other.z }; }
+	Vector3 operator*=(const Vector3& other) { return { x *= other.x, y *= other.y,z *= other.z }; }
+	Vector3 operator/=(const Vector3& other) { return { x /= other.x, y /= other.y,z /= other.z }; }
 };
 
 struct Matrix4x4 {
@@ -38,7 +38,7 @@ struct Matrix4x4 {
 /// <param name="v1">ベクトル1</param>
 /// <param name="v2">ベクトル2</param>
 ///  <returns>ベクトルの各要素を足し合わせた結果を返します。 </returns>
-Vecto3 AddVecto3(Vecto3 v1, Vecto3 v2);
+Vector3 AddVector3(Vector3 v1, Vector3 v2);
 
 /// <summary>
 /// この関数は、2つのベクトルの差を計算します。
@@ -46,7 +46,7 @@ Vecto3 AddVecto3(Vecto3 v1, Vecto3 v2);
 /// <param name="v1">ベクトル1</param>
 /// <param name="v2">ベクトル2</param>
 ///  <returns>ベクトルの各要素を引いた結果を返します。 </returns>
-Vecto3 SubtractVector3(Vecto3 v1, Vecto3 v2);
+Vector3 SubtractVector3(Vector3 v1, Vector3 v2);
 
 /// <summary>
 /// この関数は二つのベクトルの積を計算します
@@ -54,7 +54,7 @@ Vecto3 SubtractVector3(Vecto3 v1, Vecto3 v2);
 /// <param name="v1">ベクトル１</param>
 /// <param name="v2">ベクトル２</param>
 /// <returns>ベクトルの各要素を掛けた結果を返します</returns>
-Vecto3 MultiplyVector3(Vecto3 v1, Vecto3 v2);
+Vector3 MultiplyVector3(Vector3 v1, Vector3 v2);
 
 /// <summary>
 /// この関数は、指定されたスカラー倍をベクトルの各要素に適用します。
@@ -62,21 +62,21 @@ Vecto3 MultiplyVector3(Vecto3 v1, Vecto3 v2);
 /// <param name="v">ベクトル</param>
 /// <param name="s">スカラー値</param>
 /// <returns>スカラー倍された新しいベクトル</returns>
-Vecto3 ScalarMultiply(Vecto3 v, float s);
+Vector3 ScalarMultiply(Vector3 v, float s);
 
 /// <summary>
 /// この関数は、ベクトルの長さを計算します。
 /// </summary>
 /// <param name="v">ベクトル</param>
 /// <returns>ベクトルの長さ</returns>
-float Lengeh(Vecto3 v);
+float Lengeh(Vector3 v);
 
 /// <summary>
 /// この関数は、ベクトルを正規化します。
 /// </summary>
 /// <param name="v">ベクトル</param>
 /// <returns>正規化されたベクトル</returns>
-Vecto3 Normalize(Vecto3 v);
+Vector3 Normalize(Vector3 v);
 
 /// <summary>
 /// この関数は、2つのベクトルの内積を計算します。
@@ -84,7 +84,7 @@ Vecto3 Normalize(Vecto3 v);
 /// <param name="v1">ベクトル1</param>
 /// <param name="v2">ベクトル2</param>
 /// <returns>内積の結果</returns>
-float Dot(Vecto3 v1, Vecto3 v2);
+float Dot(Vector3 v1, Vector3 v2);
 
 
 //行列の計算
@@ -134,7 +134,7 @@ Matrix4x4 InverseMatrix4x4(Matrix4x4 m);
 /// <param name="v">ベクトル</param>
 /// <param name="m">行列</param>
 /// <returns>変換されたベクトル</returns>
-Vecto3 Transform(const Vecto3& v, const Matrix4x4& m);
+Vector3 Transform(const Vector3& v, const Matrix4x4& m);
 
 
 ///アフィン行列
@@ -144,7 +144,7 @@ Vecto3 Transform(const Vecto3& v, const Matrix4x4& m);
 /// </summary>
 /// <param name="scall">スケーリング値</param>
 /// <returns>スケーリング行列</returns>
-Matrix4x4 Scale(Vecto3 scall);
+Matrix4x4 Scale(Vector3 scall);
 
 /// <summary>
 /// この関数は、X軸を中心に回転する行列を計算します。
@@ -174,14 +174,14 @@ Matrix4x4 RotationZ(float angle);
 /// <param name="angleY">Y軸回転角度</param>
 /// <param name="angleZ">Z軸回転角度</param>
 /// <returns>回転行列</returns>
-Matrix4x4 Rotation(Vecto3 angle);//不安
+Matrix4x4 Rotation(Vector3 angle);//不安
 
 /// <summary>
 /// この関数は、ベクトルを行列で変換します。
 /// </summary>
 /// <param name="pos">位置</param>
 /// <param name="m">行列</param>
-Matrix4x4 Translation(Vecto3 pos);
+Matrix4x4 Translation(Vector3 pos);
 
 /// <summary>
 /// この関数は、アフィン行列を作成します。
@@ -190,7 +190,7 @@ Matrix4x4 Translation(Vecto3 pos);
 /// <param name="scale">スケーリング値</param>
 /// <param name="angle">回転角度</param>
 /// <returns>アフィン行列</returns>
-Matrix4x4 MakeAffineMatrix(Vecto3 pos, Vecto3 scale, Vecto3 angle);
+Matrix4x4 MakeAffineMatrix(Vector3 pos, Vector3 scale, Vector3 angle);
 
 /// <summary>
 /// この関数は、正射影行列を作成します。
