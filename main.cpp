@@ -37,6 +37,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 	Vecto3 cameraPos = { 1.0f,1.0f,1.0f };
+	Vecto3 cameraRotate = { 0.0f,0.0f,0.0f };
+	Vecto3 cameraScale = { 1.0f,1.0f,1.0f };
 
 	Vecto3 pos = { 1.0f,1.0f,1.0f };
 	Vecto3 rotate = { 0.0f,0.0f,0.0f };
@@ -71,21 +73,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
-		/*rotate.x += 0.1f;
-		rotate.z += 0.1f;
-		rotate.y += 0.1f;*/
 		
-		//scale.x += 0.1f;
-		//scale.y += 0.1f;
-		scale.z += 0.1f;
-
 
 		worldMatrix = MakeAffineMatrix(pos, scale, rotate);
-		cameraMatrix = MakeAffineMatrix(cameraPos, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
+		cameraMatrix = MakeAffineMatrix(cameraPos, cameraScale, cameraRotate);
 		viewMatrix = InverseMatrix4x4(cameraMatrix);
 		projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHight), 0.1f, 100.0f);
 		worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, MultiplyMatrix4x4(viewMatrix, projectionMatrix));
-		viewportMatrix = MakeViewPortMatrix(float(kWindowWidth)/100.0f, float(kWindowHight) / 100.0f, 640, 360, 0.0f, 1.0f);
+		viewportMatrix = MakeViewPortMatrix(12.8f, 7.2f, 640, 360, 0.0f, 1.0f);
 		for (int i = 0; i < 3; ++i) {
 			ndcVertex = Transform(kLocalVertices[i], worldViewProjectiveMatrix);
 			screenVertices[i] = Transform(ndcVertex, viewportMatrix);
