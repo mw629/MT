@@ -30,7 +30,7 @@ struct Matrix4x4 {
 
 //行列、ベクトルの描画
 
-void VectorScreenPrintf(int x, int y, const Vecto3& vector, const char* label);
+void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label);
 
 void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label);
 
@@ -196,6 +196,13 @@ Matrix4x4 Rotation(Vector3 angle);//不安
 /// <param name="pos">位置</param>
 /// <param name="m">行列</param>
 Matrix4x4 Translation(Vector3 pos);
+
+/// <summary>
+/// 単位行列
+/// </summary>
+/// <returns></returns>
+Matrix4x4 MakeIdentity4x4();
+
 
 /// <summary>
 /// この関数は、アフィン行列を作成します。
