@@ -135,6 +135,9 @@ Matrix4x4 ScaleMultiplyMatrix4x4(Matrix4x4 m, float s);
 /// <returns>転置された行列</returns>
 Matrix4x4 TransposeMatrix4x4(Matrix4x4 m);
 
+
+
+
 /// <summary>
 /// この関数は、行列の逆行列を計算します。
 /// </summary>

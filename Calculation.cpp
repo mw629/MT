@@ -334,14 +334,14 @@ Matrix4x4 Translation(Vector3 pos)
 	return result;
 }
 
-Matrix4x4 MakeIdentity4x4()
+Matrix4x4 IdentityMatrix()
 {
-	Matrix4x4 matrix;
-	for (int i = 0; i < 4; i++)
-	{
-		matrix.m[i][i] = 1.0f;
-	}
-	return matrix;
+	Matrix4x4 m = {
+		1.0f,0.0f,0.0f,0.0f,
+		0.0f,1.0f,0.0f,0.0f,
+		0.0f,0.0f,1.0f,0.0f,
+		0.0f,0.0f,0.0f,1.0f };
+	return m;
 }
 
 Matrix4x4 MakeAffineMatrix(Vector3 pos, Vector3 scale, Vector3 angle)
