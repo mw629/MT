@@ -49,7 +49,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 rotate = { 0.0f,0.0f,0.0f };
 	Vector3 scale = { 1.0f,1.0f,1.0f };
 
-	
+
 	Matrix4x4 worldMatrix;
 	Matrix4x4 cameraMatrix;
 	Matrix4x4 viewMatrix;
@@ -80,6 +80,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		rotate.y += 0.1f;
 
+		if (keys[DIK_W]) {
+			pos.z += 0.1f;
+		}
+		if (keys[DIK_S]) {
+			pos.z -= 0.1f;
+		}
+
+		if (keys[DIK_A]) {
+			pos.x -= 0.1f;
+		}
+		if (keys[DIK_D]) {
+			pos.x += 0.1f;
+		}
+
+
 		worldMatrix = MakeAffineMatrix(pos, scale, rotate);
 		cameraMatrix = MakeAffineMatrix(cameraPos, cameraScale, cameraRotate);
 		viewMatrix = InverseMatrix4x4(cameraMatrix);
@@ -107,7 +122,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		VectorScreenPrintf(10, 0, cross, ":Cross");
 
-		
+
 
 
 		///
