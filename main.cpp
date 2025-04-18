@@ -41,15 +41,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 
-	Vector3 cameraPos = { 1.0f,1.0f,1.0f };
+	Vector3 cameraPos = { 0.0f,0.0f,-10.0f };
 	Vector3 cameraRotate = { 0.0f,0.0f,0.0f };
 	Vector3 cameraScale = { 1.0f,1.0f,1.0f };
 
-	Vector3 pos = { 1.0f,1.0f,100.0f };
+	Vector3 pos = { 0.0f,0.0f,0.0f };
 	Vector3 rotate = { 0.0f,0.0f,0.0f };
 	Vector3 scale = { 1.0f,1.0f,1.0f };
 
-
+	
 	Matrix4x4 worldMatrix;
 	Matrix4x4 cameraMatrix;
 	Matrix4x4 viewMatrix;
@@ -61,9 +61,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 ndcVertex[3];
 
 	Vector3 kLocalVertices[3] = {
-		{0.0f,5.0f,1.0f},
-		{-5.0f,-5.0f,1.0f},
-		{5.0f,-5.0f,1.0f}
+		{0.0f,1.0f,0.0f},
+		{-1.0f,-1.0f,0.0f},
+		{1.0f,-1.0f,0.0f}
 	};
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -78,14 +78,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
-		//rotate.y += 0.1f;
+		rotate.y += 0.1f;
 
 		worldMatrix = MakeAffineMatrix(pos, scale, rotate);
 		cameraMatrix = MakeAffineMatrix(cameraPos, cameraScale, cameraRotate);
 		viewMatrix = InverseMatrix4x4(cameraMatrix);
 		projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHight), 0.1f, 100.0f);
 		worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, MultiplyMatrix4x4(viewMatrix, projectionMatrix));
-		viewportMatrix = MakeViewPortMatrix(0, 0, 1280.0f, 720.0f, 0.0f, 1.0f);
+		viewportMatrix = MakeViewPortMatrix(1280.0f, 720.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 		for (int i = 0; i < 3; ++i) {
 			ndcVertex[i] = Transform(kLocalVertices[i], worldViewProjectiveMatrix);
 			screenVertices[i] = Transform(ndcVertex[i], viewportMatrix);
@@ -107,15 +107,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		VectorScreenPrintf(10, 0, cross, ":Cross");
 
-		for (int i = 0; i < 3; i++) {
-			VectorScreenPrintf(10, 30 + 70 * i, kLocalVertices[i], "kLo");
-			VectorScreenPrintf(10, 50 + 70 * i, ndcVertex[i], "ndc");
-			VectorScreenPrintf(10, 70 + 70 * i, screenVertices[i], "screen");
-		}
-		MatrixScreenPrintf(10, 250, worldViewProjectiveMatrix, "mvp");
-		MatrixScreenPrintf(10, 350, viewportMatrix, "vp");
-		MatrixScreenPrintf(10, 450, viewMatrix, "koko");
-
+		
 
 
 		///
