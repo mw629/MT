@@ -154,6 +154,11 @@ Matrix4x4 InverseMatrix4x4(Matrix4x4 m);
 Vector3 Transform(const Vector3& v, const Matrix4x4& m);
 
 
+/// <summary>
+/// 単位行列を出します
+/// </summary>
+Matrix4x4 IdentityMatrix();
+
 ///アフィン行列
 
 /// <summary>

@@ -1,6 +1,8 @@
 #include <Novice.h>
 #include <stdint.h>
 #include <cmath>
+#include <imgui.h>
+
 #include "Calculation.h"
 
 #define M_PI 3.14f
@@ -14,7 +16,7 @@ struct Sphere {
 };
 
 void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color) {
-	const uint32_t kSubdivision = 12;
+	const uint32_t kSubdivision = 10;
 	const float kLonEvery = M_PI * 2.0f / kSubdivision;
 	const float kLatEvery = M_PI / kSubdivision;
 	//緯度の方向に分割 -n/2 ~ n/2
@@ -24,9 +26,36 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, con
 		for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex) {
 			float lon = lonIndex * kLonEvery;//現在の経度
 			Vector3 a, b, c;
-			a = { std::cos(lat) * std::cos(lon),std::sin(lat),std::cos(lat)*std::sin(lon)};
-			b = { std::cos(lat + kLatEvery),std::sin(lat + kLatEvery),std::cos(lat + kLatEvery) * std::sin(lon) };
+			Vector3 VertexA, VertexB, VertexC;
+			Vector3 screenPosA, screenPosB, screenPosC;
 
+
+			a = { std::cos(lat) * std::cos(lon),
+				std::sin(lat),
+				std::cos(lat) * std::sin(lon) };
+
+			b = { std::cos(lat + kLatEvery) * std::cos(lon),
+				std::sin(lat + kLatEvery),
+				std::cos(lat + kLatEvery) * std::sin(lon) };
+
+			c = { std::cos(lat) * std::cos(lon + kLonEvery),
+				std::sin(lat),
+				std::cos(lat) * std::sin(lon + kLonEvery) };
+
+
+			Matrix4x4 worldMatrix = MakeAffineMatrix(sphere.center, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
+			Matrix4x4 worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, viewProjectionMatrix);
+
+			VertexA = Transform(a * sphere.radius, worldViewProjectiveMatrix);
+			VertexB = Transform(b * sphere.radius, worldViewProjectiveMatrix);
+			VertexC = Transform(c * sphere.radius, worldViewProjectiveMatrix);
+
+			screenPosA = Transform(VertexA, viewportMatrix);
+			screenPosB = Transform(VertexB, viewportMatrix);
+			screenPosC = Transform(VertexC, viewportMatrix);
+
+			Novice::DrawLine(static_cast<int>(screenPosA.x), static_cast<int>(screenPosA.y), static_cast<int>(screenPosB.x), static_cast<int>(screenPosA.y), color);
+			Novice::DrawLine(static_cast<int>(screenPosA.x), static_cast<int>(screenPosA.y), static_cast<int>(screenPosC.x), static_cast<int>(screenPosC.y), color);
 		}
 	}
 
@@ -95,7 +124,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 v2{ 2.8f,0.4f,-1.3f };
 	Vector3 cross = Cross(v1, v2);
 
-
+	Sphere sphere = { {0.0f,0.0f,0.0f},{1.0f} };
 
 	Vector3 cameraPos = { 0.0f,1.9f,-6.49f };
 	Vector3 cameraRotate = { 0.26f,0.0f,0.0f };
@@ -133,6 +162,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓更新処理ここから
 		///
+
+		ImGui::Begin("window");
+		ImGui::DragFloat3("cameraTranslate", &cameraPos.x, 0.01f);
+		ImGui::DragFloat3("cameraRotate", &cameraRotate.x, 0.01f);
+		ImGui::DragFloat3("cameraCenter", &sphere.center.x, 0.01f);
+		ImGui::DragFloat("sphereRadius", &sphere.radius, 0.01f);
+		ImGui::End();
+
 
 		rotate.y += 0.1f;
 
@@ -172,7 +209,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		DrawGrid(MultiplyMatrix4x4(viewMatrix, projectionMatrix), viewportMatrix);
-
+		DrawSphere(sphere, MultiplyMatrix4x4(viewMatrix, projectionMatrix), viewportMatrix, BLACK);
 
 		///
 		/// ↑描画処理ここまで
