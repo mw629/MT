@@ -30,7 +30,7 @@ struct Matrix4x4 {
 
 //行列、ベクトルの描画
 
-void VectorScreenPrintf(int x, int y, const Vecto3& vector, const char* label);
+void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label);
 
 void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label);
 
@@ -135,6 +135,9 @@ Matrix4x4 ScaleMultiplyMatrix4x4(Matrix4x4 m, float s);
 /// <returns>転置された行列</returns>
 Matrix4x4 TransposeMatrix4x4(Matrix4x4 m);
 
+
+
+
 /// <summary>
 /// この関数は、行列の逆行列を計算します。
 /// </summary>
@@ -150,6 +153,11 @@ Matrix4x4 InverseMatrix4x4(Matrix4x4 m);
 /// <returns>変換されたベクトル</returns>
 Vector3 Transform(const Vector3& v, const Matrix4x4& m);
 
+
+/// <summary>
+/// 単位行列を出します
+/// </summary>
+Matrix4x4 IdentityMatrix();
 
 ///アフィン行列
 
@@ -196,6 +204,13 @@ Matrix4x4 Rotation(Vector3 angle);//不安
 /// <param name="pos">位置</param>
 /// <param name="m">行列</param>
 Matrix4x4 Translation(Vector3 pos);
+
+/// <summary>
+/// 単位行列
+/// </summary>
+/// <returns></returns>
+Matrix4x4 MakeIdentity4x4();
+
 
 /// <summary>
 /// この関数は、アフィン行列を作成します。

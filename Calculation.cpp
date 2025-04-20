@@ -11,7 +11,7 @@
 static const int kRowHeight = 20;
 static const int kColimnWidth = 60;
 
-void VectorScreenPrintf(int x, int y, const Vecto3& vector, const char* label) {
+void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label) {
 	Novice::ScreenPrintf(x, y, "%.02f", vector.x);
 	Novice::ScreenPrintf(x + kColimnWidth, y, "%.02f", vector.y);
 	Novice::ScreenPrintf(x + kColimnWidth * 2, y, "%.02f", vector.z);
@@ -76,10 +76,12 @@ float Lengeh(Vector3 v)
 
 Vector3 Normalize(Vector3 v)
 {
-	Vector3 result;
-	result.x = v.x / Lengeh(v);
-	result.y = v.y / Lengeh(v);
-	result.z = v.z / Lengeh(v);
+	Vector3 result{};
+	if (Lengeh(v) != 0) {
+		result.x = v.x / Lengeh(v);
+		result.y = v.y / Lengeh(v);
+		result.z = v.z / Lengeh(v);
+	}
 	return result;
 }
 
@@ -122,9 +124,9 @@ Matrix4x4 MultiplyMatrix4x4(Matrix4x4 m1, Matrix4x4 m2)//o
 		{
 			result.m[i][j]
 				= m1.m[i][0] * m2.m[0][j]
-				+ m1.m[i][1] * m2.m[1][j]
-				+ m1.m[i][2] * m2.m[2][j]
-				+ m1.m[i][3] * m2.m[3][j];
+					+ m1.m[i][1] * m2.m[1][j]
+						+ m1.m[i][2] * m2.m[2][j]
+							+ m1.m[i][3] * m2.m[3][j];
 		}
 	}
 	return result;
@@ -249,16 +251,17 @@ Matrix4x4 ScaleMultiplyMatrix4x4(Matrix4x4 m, float s)
 
 Vector3 Transform(const Vector3& v, const Matrix4x4& m)
 {
-	Vector3 result;
+	Vector3 result{};
 
 	result.x = v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0] + m.m[3][0];
 	result.y = v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1] + m.m[3][1];
 	result.z = v.x * m.m[0][2] + v.y * m.m[1][2] + v.z * m.m[2][2] + m.m[3][2];
 	float w = v.x * m.m[0][3] + v.y * m.m[1][3] + v.z * m.m[2][3] + m.m[3][3];
-	assert(w != 0);
-	result.x /= w;
-	result.y /= w;
-	result.z /= w;
+	if (w != 0) {
+		result.x /= w;
+		result.y /= w;
+		result.z /= w;
+	}
 	return result;
 }
 
@@ -280,7 +283,7 @@ Matrix4x4 RotationX(float angle)
 	result.m[1][1] = std::cos(angle);
 	result.m[1][2] = std::sin(angle);
 	result.m[2][1] = std::sin(-angle);
-	result.m[2][2] =std::cos(angle);
+	result.m[2][2] = std::cos(angle);
 	result.m[3][3] = 1.0f;
 	return result;
 }
@@ -329,6 +332,16 @@ Matrix4x4 Translation(Vector3 pos)
 	result.m[3][2] = pos.z;
 
 	return result;
+}
+
+Matrix4x4 IdentityMatrix()
+{
+	Matrix4x4 m = {
+		1.0f,0.0f,0.0f,0.0f,
+		0.0f,1.0f,0.0f,0.0f,
+		0.0f,0.0f,1.0f,0.0f,
+		0.0f,0.0f,0.0f,1.0f };
+	return m;
 }
 
 Matrix4x4 MakeAffineMatrix(Vector3 pos, Vector3 scale, Vector3 angle)
