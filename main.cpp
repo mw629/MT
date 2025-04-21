@@ -67,12 +67,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
-		ImGui::Begin("window");
+		/*ImGui::Begin("window");
 		ImGui::DragFloat3("cameraTranslate", &cameraPos.x, 0.01f);
 		ImGui::DragFloat3("cameraRotate", &cameraRotate.x, 0.01f);
 		ImGui::DragFloat3("cameraCenter", &sphere.center.x, 0.01f);
 		ImGui::DragFloat("sphereRadius", &sphere.radius, 0.01f);
-		ImGui::End();
+		ImGui::End();*/
 
 
 		rotate.y += 0.1f;
