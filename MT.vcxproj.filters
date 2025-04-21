@@ -26,6 +26,9 @@
     <ClCompile Include="Calculation.cpp">
       <Filter>class</Filter>
     </ClCompile>
+    <ClCompile Include="Draw.cpp">
+      <Filter>class</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\KamataEngine\DirectXGame\audio\Audio.h">
@@ -110,6 +113,9 @@
       <Filter>KamataEngine\Include</Filter>
     </ClInclude>
     <ClInclude Include="Calculation.h">
+      <Filter>class</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw.h">
       <Filter>class</Filter>
     </ClInclude>
   </ItemGroup>
