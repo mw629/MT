@@ -54,7 +54,7 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, con
 			screenPosB = Transform(VertexB, viewportMatrix);
 			screenPosC = Transform(VertexC, viewportMatrix);
 
-			Novice::DrawLine(static_cast<int>(screenPosA.x), static_cast<int>(screenPosA.y), static_cast<int>(screenPosB.x), static_cast<int>(screenPosA.y), color);
+			Novice::DrawLine(static_cast<int>(screenPosA.x), static_cast<int>(screenPosA.y), static_cast<int>(screenPosB.x), static_cast<int>(screenPosB .y), color);
 			Novice::DrawLine(static_cast<int>(screenPosA.x), static_cast<int>(screenPosA.y), static_cast<int>(screenPosC.x), static_cast<int>(screenPosC.y), color);
 		}
 	}
