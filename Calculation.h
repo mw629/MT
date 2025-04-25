@@ -75,6 +75,21 @@ float Dot(Vector3 v1, Vector3 v2);
 /// <returns>クロス積(外積)の結果</returns>
 Vector3 Cross(const Vector3& v1, const Vector3& v2);
 
+/// <summary>
+/// 正射影ベクトル
+/// </summary>
+/// <param name="v1"></param>
+/// <param name="v2"></param>
+/// <returns></returns>
+Vector3 ProjectionVector(const Vector3& v1, const Vector3& v2);
+
+
+/// <summary>
+/// 最近接点
+/// </summary>
+Vector3 ClosestPoint(const Vector3& point, const Segment& segment);
+
+
 //行列の計算
 
 /// <summary>

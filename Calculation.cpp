@@ -100,6 +100,26 @@ Vector3 Cross(const Vector3& v1, const Vector3& v2) {
 	return result;
 }
 
+Vector3 ProjectionVector(const Vector3& v1, const Vector3& v2)
+{
+	Vector3 result;
+	result = v2* (Dot(v1,v2) / (Lengeh(v2) * Lengeh(v2)));
+	return result;
+}
+
+Vector3 ClosestPoint(const Vector3& point, const Segment& segment)
+{
+	Vector3 result;
+	Vector3 o = { point.x - segment.origin.x,point.y - segment.origin.y,point.z - segment.origin.z };
+	result.x = segment.origin.x + ProjectionVector(o, segment.diff).x;
+	result.y = segment.origin.y + ProjectionVector(o, segment.diff).y;
+	result.z = segment.origin.z + ProjectionVector(o, segment.diff).z;
+	return result;
+}
+
+
+
+
 // 行列
 
 Matrix4x4 AddMatrix4x4(Matrix4x4 m1, Matrix4x4 m2)//o

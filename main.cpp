@@ -22,11 +22,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char keys[256] = { 0 };
 	char preKeys[256] = { 0 };
 
-	Vector3 v1{ 1.2f,-3.9f,2.5f };
-	Vector3 v2{ 2.8f,0.4f,-1.3f };
-	Vector3 cross = Cross(v1, v2);
-
-	Sphere sphere = { {0.0f,0.0f,0.0f},{1.0f} };
 
 	Draw* draw = new Draw();
 
@@ -35,20 +30,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	camera.scale = { 1.0f,1.0f,1.0f };
 	camera.rotate = { 0.26f,0.0f,0.0f };
 
-	Vector3 pos = { 0.0f,0.0f,0.0f };
-	Vector3 rotate = { 0.0f,0.0f,0.0f };
-	Vector3 scale = { 1.0f,1.0f,1.0f };
+	Segment segment{ {-2.0f,-1.0f,0.0f},{3.0f,2.0f,2.0f} };
+	Vector3 point{ -1.5f,0.6f,0.6f };
+
+	Vector3 project = ProjectionVector(SubtractVector3(point, segment.origin), segment.diff);
+	Vector3 closestPoint = ClosestPoint(point, segment);
+
+	Sphere pointSphere{ point,0.01f };
+	Sphere closestPointSphere{ closestPoint ,0.01f };
 
 
-	Vector3 screenVertices[3];
+	Vector3 start = Transform(Transform(segment.origin, draw->MakeprojectionMatrix(camera)), draw->GetViewPortMatrix());
+	Vector3 end = Transform(Transform(AddVector3(segment.origin, segment.diff), draw->MakeprojectionMatrix(camera)), draw->GetViewPortMatrix());
+	
 
-	Vector3 ndcVertex[3];
-
-	Vector3 kLocalVertices[3] = {
-		{0.0f,1.0f,0.0f},
-		{-1.0f,-1.0f,0.0f},
-		{1.0f,-1.0f,0.0f}
-	};
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
 		// フレームの開始
@@ -65,31 +60,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Begin("window");
 		ImGui::DragFloat3("cameraTranslate", &camera.pos.x, 0.01f);
 		ImGui::DragFloat3("cameraRotate", &camera.rotate.x, 0.01f);
-		ImGui::DragFloat3("sphereCenter", &sphere.center.x, 0.01f);
-		ImGui::DragFloat("sphereRadius", &sphere.radius, 0.01f);
+		ImGui::InputFloat3("Project", &project.x, "%.3f", ImGuiInputTextFlags_ReadOnly);
 		ImGui::End();
 
-
-		rotate.y += 0.1f;
-
-		if (keys[DIK_W]) {
-			pos.z += 0.1f;
-		}
-		if (keys[DIK_S]) {
-			pos.z -= 0.1f;
-		}
-
-		if (keys[DIK_A]) {
-			pos.x -= 0.1f;
-		}
-		if (keys[DIK_D]) {
-			pos.x += 0.1f;
-		}
-
-
-
-
-
+	
 
 
 
@@ -102,7 +76,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		draw->DrawGrid(camera);
-		draw->DrawSphere(sphere, camera, BLACK);
+
+		draw->DrawSphere(pointSphere, camera, RED);
+		draw->DrawSphere(closestPointSphere, camera, BLACK);
+		Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), WHITE);
 
 		///
 		/// ↑描画処理ここまで
