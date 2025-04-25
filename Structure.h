@@ -40,6 +40,6 @@ struct Object
 };
 
 struct Sphere {
-	Vector3 center;//’†S
-	float radius;//”¼Œa
+	Vector3 center;//ä¸­å¿ƒ
+	float radius;//åŠå¾„
 };

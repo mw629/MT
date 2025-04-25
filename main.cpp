@@ -31,9 +31,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Draw* draw = new Draw();
 
 	Camera camera;
-	camera.pos = { 0.0f,0.0f,0.0f };
+	camera.pos = { 0.0f,1.9f,-6.49f };
 	camera.scale = { 1.0f,1.0f,1.0f };
-	camera.rotate = { 0.0f,0.0f,0.0f };
+	camera.rotate = { 0.26f,0.0f,0.0f };
 
 	Vector3 pos = { 0.0f,0.0f,0.0f };
 	Vector3 rotate = { 0.0f,0.0f,0.0f };
@@ -62,12 +62,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
-		/*ImGui::Begin("window");
-		ImGui::DragFloat3("cameraTranslate", &cameraPos.x, 0.01f);
-		ImGui::DragFloat3("cameraRotate", &cameraRotate.x, 0.01f);
-		ImGui::DragFloat3("cameraCenter", &sphere.center.x, 0.01f);
+		ImGui::Begin("window");
+		ImGui::DragFloat3("cameraTranslate", &camera.pos.x, 0.01f);
+		ImGui::DragFloat3("cameraRotate", &camera.rotate.x, 0.01f);
+		ImGui::DragFloat3("sphereCenter", &sphere.center.x, 0.01f);
 		ImGui::DragFloat("sphereRadius", &sphere.radius, 0.01f);
-		ImGui::End();*/
+		ImGui::End();
 
 
 		rotate.y += 0.1f;
@@ -87,10 +87,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 
 
-		
 
-		
-		
+
+
+
 
 
 		///
@@ -102,7 +102,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		draw->DrawGrid(camera);
-		draw->DrawSphere(sphere,camera, BLACK);
+		draw->DrawSphere(sphere, camera, BLACK);
 
 		///
 		/// ↑描画処理ここまで
@@ -117,7 +117,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 	}
 
-	delete Draw;
+	delete draw;
 
 
 	// ライブラリの終了

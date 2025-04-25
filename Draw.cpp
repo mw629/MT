@@ -1,6 +1,6 @@
 #include <Novice.h>
 #include <stdint.h>
-#include <cmath>]
+#include <cmath>
 
 #include "Draw.h"
 
@@ -114,5 +114,6 @@ Matrix4x4 Draw::MakeprojectionMatrix(Camera camera)
 Matrix4x4 Draw::Renderingpipeline(Camera camera, Object object)
 {
 	Matrix4x4 worldMatrix = MakeAffineMatrix(object.pos, object.scale, object.rotate);
-	worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, MakeprojectionMatrix(camera));
+	Matrix4x4 worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, MakeprojectionMatrix(camera));
+	return worldViewProjectiveMatrix;
 }
