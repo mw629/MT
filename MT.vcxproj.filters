@@ -14,18 +14,14 @@
     <Filter Include="KamataEngine\Adapter">
       <UniqueIdentifier>{c6468eb4-788b-4a83-b207-a5f4804e56c5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="class">
-      <UniqueIdentifier>{7f2f8cbc-1f82-4d66-9ac7-50da69a3fa31}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="C:\KamataEngine\Adapter\Novice.cpp">
       <Filter>KamataEngine\Adapter</Filter>
     </ClCompile>
-    <ClCompile Include="Calculation.cpp">
-      <Filter>class</Filter>
-    </ClCompile>
+    <ClCompile Include="Calculation.cpp" />
+    <ClCompile Include="Draw.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\KamataEngine\DirectXGame\audio\Audio.h">
@@ -109,8 +105,8 @@
     <ClInclude Include="C:\KamataEngine\DirectXGame\2d\ImGuiManager.h">
       <Filter>KamataEngine\Include</Filter>
     </ClInclude>
-    <ClInclude Include="Calculation.h">
-      <Filter>class</Filter>
-    </ClInclude>
+    <ClInclude Include="Draw.h" />
+    <ClInclude Include="Calculation.h" />
+    <ClInclude Include="Structure.h" />
   </ItemGroup>
 </Project>
