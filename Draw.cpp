@@ -1,11 +1,12 @@
-#include "Draw.h"
 #include <Novice.h>
 #include <stdint.h>
 #include <cmath>]
 
+#include "Draw.h"
+
 #define M_PI 3.14f
 
-void Draw::DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color) {
+void Draw::DrawSphere(const Sphere& sphere, Camera camera,uint32_t color) {
 	const uint32_t kSubdivision = 10;
 	const float kLonEvery = M_PI * 2.0f / kSubdivision;
 	const float kLatEvery = M_PI / kSubdivision;
@@ -34,7 +35,7 @@ void Draw::DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatri
 
 
 			Matrix4x4 worldMatrix = MakeAffineMatrix(sphere.center, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
-			Matrix4x4 worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, viewProjectionMatrix);
+			Matrix4x4 worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, MakeprojectionMatrix(camera));
 
 			VertexA = Transform(a * sphere.radius, worldViewProjectiveMatrix);
 			VertexB = Transform(b * sphere.radius, worldViewProjectiveMatrix);
@@ -52,7 +53,7 @@ void Draw::DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatri
 }
 
 
-void Draw::DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix)
+void Draw::DrawGrid(Camera camera)
 {
 
 	const float kGridHalfWidth = 2.0f;//Gridの半分の幅
@@ -72,7 +73,7 @@ void Draw::DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& view
 	for (uint32_t xIndex = 0; xIndex <= kSubdivision; ++xIndex) {
 		pos = { 0.0f ,0.0f,2.0f - kGridEvery * xIndex };
 		worldMatrix = MakeAffineMatrix(pos, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
-		worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, viewProjectionMatrix);
+		worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, MakeprojectionMatrix(camera));
 		startVertex = Transform({ -2.0f,0.0f,0.0f }, worldViewProjectiveMatrix);
 		endVertex = Transform({ 2.0f,0.0f,0.0f }, worldViewProjectiveMatrix);
 		screenStartPos = Transform(startVertex, viewportMatrix);
@@ -87,7 +88,7 @@ void Draw::DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& view
 	for (uint32_t zIndex = 0; zIndex <= kSubdivision; ++zIndex) {
 		pos = { 2.0f - kGridEvery * zIndex ,0.0f,0.0f };
 		worldMatrix = MakeAffineMatrix(pos, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
-		worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, viewProjectionMatrix);
+		worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, MakeprojectionMatrix(camera));
 		startVertex = Transform({ 0.0f,0.0f,-2.0f }, worldViewProjectiveMatrix);
 		endVertex = Transform({ 0.0f,0.0f,2.0f }, worldViewProjectiveMatrix);
 		screenStartPos = Transform(startVertex, viewportMatrix);
@@ -99,4 +100,19 @@ void Draw::DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& view
 			Novice::DrawLine(static_cast<int>(screenStartPos.x), static_cast<int>(screenStartPos.y), static_cast<int>(screenEndPos.x), static_cast<int>(screenEndPos.y), 0xAAAAAAFF);
 		}
 	}
+}
+
+Matrix4x4 Draw::MakeprojectionMatrix(Camera camera)
+{
+	cameraMatrix = MakeAffineMatrix(camera.pos, camera.scale, camera.rotate);
+	viewMatrix = InverseMatrix4x4(cameraMatrix);
+	projectionMatrix = MakePerspectiveFovMatrix(0.45f, 1280.0f / 720.0f, 0.1f, 100.0f);
+	
+	return MultiplyMatrix4x4(viewMatrix, projectionMatrix);
+}
+
+Matrix4x4 Draw::Renderingpipeline(Camera camera, Object object)
+{
+	Matrix4x4 worldMatrix = MakeAffineMatrix(object.pos, object.scale, object.rotate);
+	worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, MakeprojectionMatrix(camera));
 }

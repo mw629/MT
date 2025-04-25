@@ -107,5 +107,6 @@
     </ClInclude>
     <ClInclude Include="Draw.h" />
     <ClInclude Include="Calculation.h" />
+    <ClInclude Include="Structure.h" />
   </ItemGroup>
 </Project>

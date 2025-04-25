@@ -30,21 +30,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Draw* draw = new Draw();
 
-	Vector3 cameraPos = { 0.0f,1.9f,-6.49f };
-	Vector3 cameraRotate = { 0.26f,0.0f,0.0f };
-	Vector3 cameraScale = { 1.0f,1.0f,1.0f };
+	Camera camera;
+	camera.pos = { 0.0f,0.0f,0.0f };
+	camera.scale = { 1.0f,1.0f,1.0f };
+	camera.rotate = { 0.0f,0.0f,0.0f };
 
 	Vector3 pos = { 0.0f,0.0f,0.0f };
 	Vector3 rotate = { 0.0f,0.0f,0.0f };
 	Vector3 scale = { 1.0f,1.0f,1.0f };
 
 
-	Matrix4x4 worldMatrix;
-	Matrix4x4 cameraMatrix;
-	Matrix4x4 viewMatrix;
-	Matrix4x4 projectionMatrix;
-	Matrix4x4 worldViewProjectiveMatrix;
-	Matrix4x4 viewportMatrix;
 	Vector3 screenVertices[3];
 
 	Vector3 ndcVertex[3];
@@ -67,12 +62,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
-		ImGui::Begin("window");
+		/*ImGui::Begin("window");
 		ImGui::DragFloat3("cameraTranslate", &cameraPos.x, 0.01f);
 		ImGui::DragFloat3("cameraRotate", &cameraRotate.x, 0.01f);
 		ImGui::DragFloat3("cameraCenter", &sphere.center.x, 0.01f);
 		ImGui::DragFloat("sphereRadius", &sphere.radius, 0.01f);
-		ImGui::End();
+		ImGui::End();*/
 
 
 		rotate.y += 0.1f;
@@ -92,16 +87,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 
 
-		worldMatrix = MakeAffineMatrix(pos, scale, rotate);
-		cameraMatrix = MakeAffineMatrix(cameraPos, cameraScale, cameraRotate);
-		viewMatrix = InverseMatrix4x4(cameraMatrix);
-		projectionMatrix = MakePerspectiveFovMatrix(0.45f, 1280.0f / 720.0f, 0.1f, 100.0f);
-		worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, MultiplyMatrix4x4(viewMatrix, projectionMatrix));
-		viewportMatrix = MakeViewPortMatrix(1280.0f, 720.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-		for (int i = 0; i < 3; ++i) {
-			ndcVertex[i] = Transform(kLocalVertices[i], worldViewProjectiveMatrix);
-			screenVertices[i] = Transform(ndcVertex[i], viewportMatrix);
-		}
+		
+
+		
+		
 
 
 		///
@@ -112,8 +101,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		draw->DrawGrid(MultiplyMatrix4x4(viewMatrix, projectionMatrix), viewportMatrix);
-		draw->DrawSphere(sphere, MultiplyMatrix4x4(viewMatrix, projectionMatrix), viewportMatrix, BLACK);
+		draw->DrawGrid(camera);
+		draw->DrawSphere(sphere,camera, BLACK);
 
 		///
 		/// ↑描画処理ここまで

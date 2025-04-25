@@ -1,6 +1,6 @@
-#include <Novice.h>
 #include "Calculation.h"
-//#include <math.h>
+
+#include <Novice.h>
 #include <cmath>
 #include "assert.h"
 
