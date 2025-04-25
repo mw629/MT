@@ -33,5 +33,10 @@ public:
 
 	Matrix4x4 Renderingpipeline(Camera camera, Object object);
 
+
+	//ゲッター
+
+	Matrix4x4 GetViewPortMatrix() { return viewportMatrix; }
+
 };
 
