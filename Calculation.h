@@ -9,6 +9,18 @@ void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label);
 void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label);
 
 
+
+//計算
+
+/// <summary>
+/// 絶対値を求める
+/// </summary>
+/// <param name="a">絶対値を求めたい数値</param>
+/// <returns></returns>
+float AbsValue(float a);
+
+
+
 //三次元ベクトルの計算
 
 
@@ -123,8 +135,6 @@ Matrix4x4 ScaleMultiplyMatrix4x4(Matrix4x4 m, float s);
 /// <param name="m">行列</param>
 /// <returns>転置された行列</returns>
 Matrix4x4 TransposeMatrix4x4(Matrix4x4 m);
-
-
 
 
 /// <summary>
@@ -244,3 +254,11 @@ Matrix4x4 MakePerspectiveFovMatrix(float fovY, float a, float zn, float zf);
 /// <returns>ビューポート行列</returns>
 Matrix4x4 MakeViewPortMatrix(float width, float height, float left, float top, float minD, float maxD);
 
+
+//平面//
+
+/// <summary>
+/// </summary> 
+/// <param name="vector">平面の法線</param>
+/// <returns></returns>
+Vector3 Perpendicular(const Vector3& vector);

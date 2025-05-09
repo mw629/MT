@@ -25,9 +25,12 @@ private:
 
 public:
 
+	//球の描画
 	void DrawSphere(const Sphere& sphere, Camera camera,uint32_t color);
-
+	//グリッドの描画
 	void DrawGrid(Camera camera);
+	//平面の描画
+	void DrawPlane(const Plane& plane, Camera camera, uint32_t color);
 
 	Matrix4x4 MakeprojectionMatrix(Camera camera);
 

@@ -12,6 +12,25 @@
 const char kWindowTitle[] = "LC1A_27_ワタナベ_マサト";
 
 
+bool IsCollision(const Sphere& sphere1, const Sphere& sphere2) {
+	
+	float distance = Lengeh(sphere2.center - sphere1.center);
+
+	if (distance <= sphere1.radius + sphere2.radius) {
+		return true;
+	}
+	return false;
+}
+
+bool IsCollision(const Sphere& sphere, const Plane& plane) {
+	
+	float distance = AbsValue(Dot(plane.normal, sphere.center) - plane.distance);
+	if (distance <= sphere.radius) {
+		return true;
+	}
+	return false;
+}
+
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
@@ -30,19 +49,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	camera.scale = { 1.0f,1.0f,1.0f };
 	camera.rotate = { 0.26f,0.0f,0.0f };
 
-	Segment segment{ {-2.0f,-1.0f,0.0f},{3.0f,2.0f,2.0f} };
-	Vector3 point{ -1.5f,0.6f,0.6f };
-
-	Vector3 project = ProjectionVector(SubtractVector3(point, segment.origin), segment.diff);
-	Vector3 closestPoint = ClosestPoint(point, segment);
-
-	Sphere pointSphere{ point,0.01f };
-	Sphere closestPointSphere{ closestPoint ,0.01f };
-
-
-	Vector3 start = Transform(Transform(segment.origin, draw->MakeprojectionMatrix(camera)), draw->GetViewPortMatrix());
-	Vector3 end = Transform(Transform(AddVector3(segment.origin, segment.diff), draw->MakeprojectionMatrix(camera)), draw->GetViewPortMatrix());
-	
+	Sphere sphere1 = { {0,0,0},1.0f };
+	Plane plane = { {0.0f,1.0f,0.0f},1.0f };
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -60,8 +68,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Begin("window");
 		ImGui::DragFloat3("cameraTranslate", &camera.pos.x, 0.01f);
 		ImGui::DragFloat3("cameraRotate", &camera.rotate.x, 0.01f);
-		ImGui::InputFloat3("Project", &project.x, "%.3f", ImGuiInputTextFlags_ReadOnly);
+		ImGui::DragFloat3("Sphere1Center", &sphere1.center.x, 0.01f);
+		ImGui::DragFloat("Sphere1Radius", &sphere1.radius, 0.01f);
+		ImGui::DragFloat3("Plane.Normal", &plane.normal.x, 0.01f);
+		ImGui::DragFloat("Planedistance", &plane.distance,0.01f);
 		ImGui::End();
+		plane.normal = Normalize(plane.normal);
 
 	
 
@@ -76,11 +88,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		draw->DrawGrid(camera);
-
-		draw->DrawSphere(pointSphere, camera, RED);
-		draw->DrawSphere(closestPointSphere, camera, BLACK);
-		Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), WHITE);
-
+		if (IsCollision(sphere1, plane)) {
+			draw->DrawSphere(sphere1, camera, RED);
+		}
+		else {
+			draw->DrawSphere(sphere1, camera, BLACK);
+		}
+		draw->DrawPlane(plane, camera, BLACK);
+	
 		///
 		/// ↑描画処理ここまで
 		///
