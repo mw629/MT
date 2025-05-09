@@ -6,7 +6,7 @@
 
 #define M_PI 3.14f
 
-void Draw::DrawSphere(const Sphere& sphere, Camera camera,uint32_t color) {
+void Draw::DrawSphere(const Sphere& sphere, Camera camera, uint32_t color) {
 	const uint32_t kSubdivision = 10;
 	const float kLonEvery = M_PI * 2.0f / kSubdivision;
 	const float kLatEvery = M_PI / kSubdivision;
@@ -102,12 +102,35 @@ void Draw::DrawGrid(Camera camera)
 	}
 }
 
+void Draw::DrawPlane(const Plane& plane, Camera camera, uint32_t color)
+{
+	Vector3 center = ScalarMultiply(plane.normal, plane.distance);
+	Vector3 Perpendiculars[4];
+	Perpendiculars[0] = Normalize(Perpendicular(plane.normal));
+	Perpendiculars[1] = { -Perpendiculars[0].x,-Perpendiculars[0].y,-Perpendiculars[0].z };
+	Perpendiculars[2] = Cross(plane.normal, Perpendiculars[0]);
+	Perpendiculars[3] = { -Perpendiculars[2].x,-Perpendiculars[2].y,-Perpendiculars[2].z };
+
+	Vector3 points[4];
+	for (int32_t index = 0; index < 4; ++index) {
+		Vector3 extend = ScalarMultiply(Perpendiculars[index], 2.0f);
+		Vector3 point = AddVector3(center, extend);
+		points[index] = Transform(Transform(point, MakeprojectionMatrix(camera)), viewportMatrix);
+	}
+
+	Novice::DrawLine(static_cast<int>(points[0].x), static_cast<int>(points[0].y), static_cast<int>(points[2].x), static_cast<int>(points[2].y), color);
+	Novice::DrawLine(static_cast<int>(points[0].x), static_cast<int>(points[0].y), static_cast<int>(points[3].x), static_cast<int>(points[3].y), color);
+	Novice::DrawLine(static_cast<int>(points[1].x), static_cast<int>(points[1].y), static_cast<int>(points[2].x), static_cast<int>(points[2].y), color);
+	Novice::DrawLine(static_cast<int>(points[1].x), static_cast<int>(points[1].y), static_cast<int>(points[3].x), static_cast<int>(points[3].y), color);
+
+}
+
 Matrix4x4 Draw::MakeprojectionMatrix(Camera camera)
 {
 	cameraMatrix = MakeAffineMatrix(camera.pos, camera.scale, camera.rotate);
 	viewMatrix = InverseMatrix4x4(cameraMatrix);
 	projectionMatrix = MakePerspectiveFovMatrix(0.45f, 1280.0f / 720.0f, 0.1f, 100.0f);
-	
+
 	return MultiplyMatrix4x4(viewMatrix, projectionMatrix);
 }
 

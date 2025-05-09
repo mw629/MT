@@ -22,6 +22,15 @@ bool IsCollision(const Sphere& sphere1, const Sphere& sphere2) {
 	return false;
 }
 
+bool IsCollision(const Sphere& sphere, const Plane& plane) {
+	
+	float distance = AbsValue(Dot(plane.normal, sphere.center) - plane.distance);
+	if (distance <= sphere.radius) {
+		return true;
+	}
+	return false;
+}
+
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
@@ -41,7 +50,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	camera.rotate = { 0.26f,0.0f,0.0f };
 
 	Sphere sphere1 = { {0,0,0},1.0f };
-	Sphere sphere2 = { {0,0,0},0.5f };
+	Plane plane = { {0.0f,1.0f,0.0f},1.0f };
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -61,9 +70,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::DragFloat3("cameraRotate", &camera.rotate.x, 0.01f);
 		ImGui::DragFloat3("Sphere1Center", &sphere1.center.x, 0.01f);
 		ImGui::DragFloat("Sphere1Radius", &sphere1.radius, 0.01f);
-		ImGui::DragFloat3("Sphere2Center", &sphere2.center.x, 0.01f);
-		ImGui::DragFloat("Sphere2Radius", &sphere2.radius, 0.01f);
+		ImGui::DragFloat3("Plane.Normal", &plane.normal.x, 0.01f);
+		ImGui::DragFloat("Planedistance", &plane.distance,0.01f);
 		ImGui::End();
+		plane.normal = Normalize(plane.normal);
 
 	
 
@@ -78,13 +88,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		draw->DrawGrid(camera);
-		if (IsCollision(sphere1, sphere2)) {
+		if (IsCollision(sphere1, plane)) {
 			draw->DrawSphere(sphere1, camera, RED);
 		}
 		else {
 			draw->DrawSphere(sphere1, camera, BLACK);
 		}
-		draw->DrawSphere(sphere2, camera, BLACK);
+		draw->DrawPlane(plane, camera, BLACK);
 	
 		///
 		/// ↑描画処理ここまで

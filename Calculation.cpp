@@ -28,6 +28,14 @@ void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label
 	}
 }
 
+float AbsValue(float a)
+{
+	if (a < 0) {
+		a *= -1;
+	}
+	return a;
+}
+
 
 
 
@@ -426,5 +434,13 @@ Matrix4x4 MakeViewPortMatrix(float width, float height, float left, float top, f
 	result.m[3][2] = minD;
 	result.m[3][3] = 1.0f;
 	return result;
+}
+
+Vector3 Perpendicular(const Vector3& vector)
+{
+	if (vector.x != 0.0f || vector.y != 0.0f) {
+		return{ -vector.y, vector.x, 0.0f };
+	}
+	return{0.0f, -vector.z, vector.y};
 }
 

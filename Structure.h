@@ -44,6 +44,11 @@ struct Sphere {
 	float radius;//半径
 };
 
+struct Plane {
+	Vector3 normal;//法線
+	float distance;//距離
+};
+
 struct Line {
 	Vector3 origin; //始点
 	Vector3 diff;//終点への差分
