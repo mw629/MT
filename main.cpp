@@ -31,6 +31,31 @@ bool IsCollision(const Sphere& sphere, const Plane& plane) {
 	return false;
 }
 
+bool isCollision(const Plane& plane, const Segment line) {
+	float dot = Dot(plane.normal, line.diff);
+
+	if (dot == 0.0f) {
+		return false;
+	}
+
+	float t = (plane.distance - Dot(line.origin, plane.normal)) / dot;
+
+	if (0 <= t && t <= 1) {
+		return true;
+	}
+	return false;
+}
+
+
+
+bool isCollision(const Triangle& triangle, const Segment line) {
+	
+
+
+}
+
+
+
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
