@@ -31,6 +31,21 @@ bool IsCollision(const Sphere& sphere, const Plane& plane) {
 	return false;
 }
 
+bool isCollision(const Plane& plane, const Segment line) {
+	float dot = Dot(plane.normal, line.diff);
+
+	if (dot == 0.0f) {
+		return false;
+	}
+
+	float t = (plane.distance - Dot(line.origin, plane.normal)) / dot;
+
+	if (0 <= t && t <= 1) {
+		return true;
+	}
+	return false;
+}
+
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
@@ -49,7 +64,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	camera.scale = { 1.0f,1.0f,1.0f };
 	camera.rotate = { 0.26f,0.0f,0.0f };
 
-	Sphere sphere1 = { {0,0,0},1.0f };
+	Segment line = { {-1.0f,-1.0f,0.0f},{1.0f,1.0f,0.0f} };
 	Plane plane = { {0.0f,1.0f,0.0f},1.0f };
 
 	// ウィンドウの×ボタンが押されるまでループ
@@ -68,10 +83,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Begin("window");
 		ImGui::DragFloat3("cameraTranslate", &camera.pos.x, 0.01f);
 		ImGui::DragFloat3("cameraRotate", &camera.rotate.x, 0.01f);
-		ImGui::DragFloat3("Sphere1Center", &sphere1.center.x, 0.01f);
-		ImGui::DragFloat("Sphere1Radius", &sphere1.radius, 0.01f);
 		ImGui::DragFloat3("Plane.Normal", &plane.normal.x, 0.01f);
 		ImGui::DragFloat("Planedistance", &plane.distance,0.01f);
+		ImGui::DragFloat3("line", &line.origin.x, 0.01f);
+		ImGui::DragFloat3("line", &line.diff.x, 0.01f);
+		if (ImGui::TreeNode("line")) {
+			ImGui::DragFloat3("line.origin", &line.origin.x, 0.01f);
+			ImGui::DragFloat3("line.Normal", &line.diff.x, 0.01f);
+		}
 		ImGui::End();
 		plane.normal = Normalize(plane.normal);
 
@@ -88,11 +107,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		draw->DrawGrid(camera);
-		if (IsCollision(sphere1, plane)) {
-			draw->DrawSphere(sphere1, camera, RED);
+		if (IsCollision(plane,line)) {
+			Novice::DrawLine((int)line.origin.x, (int)line.origin.y, (int)line.diff.x, (int)line.diff.y, RED);
 		}
 		else {
-			draw->DrawSphere(sphere1, camera, BLACK);
+			Novice::DrawLine((int)line.origin.x, (int)line.origin.y, (int)line.diff.x, (int)line.diff.y, WHITE);
 		}
 		draw->DrawPlane(plane, camera, BLACK);
 	
