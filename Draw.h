@@ -33,7 +33,8 @@ public:
 	void DrawPlane(const Plane& plane, Camera camera, uint32_t color);
 	//線の描画
 	void DrawLine(const Segment& line, Camera camera, uint32_t color);
-
+	//三角形の描画
+	void DrawTriangle(const Triangle& triangle, Camera camera, uint32_t color, FillMode fillMode);
 
 	Matrix4x4 MakeprojectionMatrix(Camera camera);
 

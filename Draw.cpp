@@ -128,12 +128,24 @@ void Draw::DrawPlane(const Plane& plane, Camera camera, uint32_t color)
 
 void Draw::DrawLine(const Segment& line, Camera camera, uint32_t color)
 {
-	Vector3 start = Transform(Transform(line.origin,MakeprojectionMatrix(camera)), GetViewPortMatrix());
-	Vector3 end = Transform(Transform(AddVector3(line.origin, line.diff),MakeprojectionMatrix(camera)),GetViewPortMatrix());
+	Vector3 start = Transform(Transform(line.origin, MakeprojectionMatrix(camera)), GetViewPortMatrix());
+	Vector3 end = Transform(Transform(AddVector3(line.origin, line.diff), MakeprojectionMatrix(camera)), GetViewPortMatrix());
 
 	Novice::DrawLine(static_cast<int>(start.x), static_cast<int>(start.y), static_cast<int>(end.x), static_cast<int>(end.y), color);
 
-	
+
+}
+
+void Draw::DrawTriangle(const Triangle& triangle, Camera camera, uint32_t color, FillMode fillMode)
+{
+	Vector3 vertices[3];
+	vertices[0] = Transform(Transform(triangle.vertices[0], MakeprojectionMatrix(camera)), GetViewPortMatrix());
+	vertices[1] = Transform(Transform(triangle.vertices[1], MakeprojectionMatrix(camera)), GetViewPortMatrix());
+	vertices[2] = Transform(Transform(triangle.vertices[2], MakeprojectionMatrix(camera)), GetViewPortMatrix());
+
+	Novice::DrawTriangle(static_cast<int>(vertices[0].x), static_cast<int>(vertices[0].y),
+		static_cast<int>(vertices[1].x), static_cast<int>(vertices[1].y),
+		static_cast<int>(vertices[2].x), static_cast<int>(vertices[2].y), color, fillMode);
 }
 
 Matrix4x4 Draw::MakeprojectionMatrix(Camera camera)
