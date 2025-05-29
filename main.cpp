@@ -13,7 +13,7 @@ const char kWindowTitle[] = "LC1A_27_ワタナベ_マサト";
 
 
 bool IsCollision(const Sphere& sphere1, const Sphere& sphere2) {
-	
+
 	float distance = Lengeh(sphere2.center - sphere1.center);
 
 	if (distance <= sphere1.radius + sphere2.radius) {
@@ -23,7 +23,7 @@ bool IsCollision(const Sphere& sphere1, const Sphere& sphere2) {
 }
 
 bool IsCollision(const Sphere& sphere, const Plane& plane) {
-	
+
 	float distance = AbsValue(Dot(plane.normal, sphere.center) - plane.distance);
 	if (distance <= sphere.radius) {
 		return true;
@@ -63,7 +63,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	camera.scale = { 1.0f,1.0f,1.0f };
 	camera.rotate = { 0.26f,0.0f,0.0f };
 
-	Segment line = { {0,0,0}, {0,0,0} };
+	Segment line = { {0,0,0}, {640,360,0} };
 	Plane plane = { {0.0f,1.0f,0.0f},1.0f };
 
 	// ウィンドウの×ボタンが押されるまでループ
@@ -82,17 +82,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Begin("window");
 		ImGui::DragFloat3("cameraTranslate", &camera.pos.x, 0.01f);
 		ImGui::DragFloat3("cameraRotate", &camera.rotate.x, 0.01f);
-	
+
 
 		ImGui::DragFloat3("line.origin", &line.origin.x, 0.01f);
 		ImGui::DragFloat3("line.diff", &line.diff.x, 0.01f);
 
 		ImGui::DragFloat3("Plane.Normal", &plane.normal.x, 0.01f);
-		ImGui::DragFloat("Planedistance", &plane.distance,0.01f);
+		ImGui::DragFloat("Planedistance", &plane.distance, 0.01f);
 		ImGui::End();
 		plane.normal = Normalize(plane.normal);
 
-	
+
 
 
 
@@ -105,14 +105,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		draw->DrawGrid(camera);
-		if (IsCollision(plane,line)) {
-			draw->DrawLine(line, camera, RED);
+		if (IsCollision(plane, line)) {
+			Novice::DrawLine(static_cast<int>(line.origin.x), static_cast<int>(line.origin.y), static_cast<int>(line.diff.x), static_cast<int>(line.diff.y), RED);
 		}
 		else {
-			draw->DrawLine(line, camera, BLACK);
+			Novice::DrawLine(static_cast<int>(line.origin.x), static_cast<int>(line.origin.y), static_cast<int>(line.diff.x), static_cast<int>(line.diff.y), BLACK);
 		}
 		draw->DrawPlane(plane, camera, BLACK);
-	
+
 		///
 		/// ↑描画処理ここまで
 		///

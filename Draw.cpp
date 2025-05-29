@@ -139,8 +139,8 @@ void Draw::DrawLine(const Segment& line, Camera camera, uint32_t color)
 	originWorldViewProjectiveMatrix = MultiplyMatrix4x4(originWorldMatrix,MakeprojectionMatrix(camera));
 	diffWorldViewProjectiveMatrix = MultiplyMatrix4x4(diffWorldMatrix, MakeprojectionMatrix(camera));
 	
-	ScreenLine.origin = Transform({ 1,1,1 }, originWorldViewProjectiveMatrix);
-	ScreenLine.diff = Transform({ 1,1,1 }, diffWorldViewProjectiveMatrix);
+	ScreenLine.origin = Transform({ 0,0,0}, originWorldViewProjectiveMatrix);
+	ScreenLine.diff = Transform({ 0,0,0 }, diffWorldViewProjectiveMatrix);
 
 	Novice::DrawLine(static_cast<int>(ScreenLine.origin.x), static_cast<int>(ScreenLine.origin.y), static_cast<int>(ScreenLine.diff.x), static_cast<int>(ScreenLine.diff.y), color);
 
