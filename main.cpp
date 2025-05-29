@@ -45,6 +45,28 @@ bool IsCollision(const Plane& plane, const Segment& line) {
 
 }
 
+bool IsCollision(const Triangle& triangle, const Segment& line) {
+
+	Vector3 cross01 = Cross(SubtractVector3(triangle.vertices[0], triangle.vertices[1]), ClosestPoint(triangle.vertices[1], line));
+	Vector3 cross02 = Cross(SubtractVector3(triangle.vertices[1], triangle.vertices[2]), ClosestPoint(triangle.vertices[2], line));
+	Vector3 cross03 = Cross(SubtractVector3(triangle.vertices[2], triangle.vertices[0]), ClosestPoint(triangle.vertices[0], line));
+	
+	
+	Vector3 edge1 = triangle.vertices[1] - triangle.vertices[0];
+	Vector3 edge2 = triangle.vertices[2] - triangle.vertices[0];
+
+	Vector3 normal = Cross(edge1, edge2);
+
+	if (Dot(cross01, normal) >= 0.0f &&
+		Dot(cross02, normal) >= 0.0f &&
+		Dot(cross03, normal) >= 0.0f) {
+		return true;
+	}
+	return false;
+}
+
+
+
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
@@ -63,8 +85,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	camera.scale = { 1.0f,1.0f,1.0f };
 	camera.rotate = { 0.26f,0.0f,0.0f };
 
+	Triangle triangle = { Vector3{-1.0f,0.0f,0.0f},Vector3{0.0f,1.0f,0.0f }, Vector3{ 1.0f,0.0f,0.0f } };
 	Segment line = { {-1,-1,0}, {1,1,0} };
-	Plane plane = { {0.0f,1.0f,0.0f},1.0f };
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -88,10 +110,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::DragFloat3("line.origin", &line.origin.x, 0.01f);
 		ImGui::DragFloat3("line.diff", &line.diff.x, 0.01f);
 
-		ImGui::DragFloat3("Plane.Normal", &plane.normal.x, 0.01f);
-		ImGui::DragFloat("Planedistance", &plane.distance, 0.01f);
+		ImGui::DragFloat3("triangle[0]", &triangle.vertices[0].x, 0.01f);
+		ImGui::DragFloat3("triangle[1]", &triangle.vertices[1].x, 0.01f);
+		ImGui::DragFloat3("triangle[2]", &triangle.vertices[2].x, 0.01f);
 		ImGui::End();
-		plane.normal = Normalize(plane.normal);
 
 
 
@@ -106,13 +128,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		draw->DrawGrid(camera);
-		if (IsCollision(plane, line)) {
+		if (IsCollision(triangle, line)) {
 			draw->DrawLine(line, camera, RED);
 		}
 		else {
 			draw->DrawLine(line, camera, BLACK);
 		}
-		draw->DrawPlane(plane, camera, BLACK);
+		draw->DrawTriangle(triangle, camera, BLACK,kFillModeWireFrame);
 
 		///
 		/// ↑描画処理ここまで
