@@ -1,9 +1,9 @@
 #pragma once
 
 struct Vector3 {
-	float x;
-	float y;
-	float z;
+	float x = 0.0f;
+	float y = 0.0f;
+	float z = 0.0f;
 	float w = 1.0f;
 
 	Vector3 operator+(const Vector3& other) const { return { x + other.x, y + other.y,z + other.z }; }
@@ -54,7 +54,7 @@ struct Line {
 	Vector3 diff;//終点への差分
 };
 
-struct Ray{
+struct Ray {
 	Vector3 origin; //始点
 	Vector3 diff;//終点への差分
 };

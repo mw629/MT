@@ -77,7 +77,7 @@ void Draw::DrawGrid(Camera camera)
 		startVertex = Transform({ -2.0f,0.0f,0.0f }, worldViewProjectiveMatrix);
 		endVertex = Transform({ 2.0f,0.0f,0.0f }, worldViewProjectiveMatrix);
 		screenStartPos = Transform(startVertex, viewportMatrix);
-		screenEndPos = Transform(endVertex, viewportMatrix);;
+		screenEndPos = Transform(endVertex, viewportMatrix);
 		if (xIndex == kSubdivision / 2) {
 			Novice::DrawLine(static_cast<int>(screenStartPos.x), static_cast<int>(screenStartPos.y), static_cast<int>(screenEndPos.x), static_cast<int>(screenEndPos.y), 0x000000FF);
 		}
@@ -92,7 +92,7 @@ void Draw::DrawGrid(Camera camera)
 		startVertex = Transform({ 0.0f,0.0f,-2.0f }, worldViewProjectiveMatrix);
 		endVertex = Transform({ 0.0f,0.0f,2.0f }, worldViewProjectiveMatrix);
 		screenStartPos = Transform(startVertex, viewportMatrix);
-		screenEndPos = Transform(endVertex, viewportMatrix);;
+		screenEndPos = Transform(endVertex, viewportMatrix);
 		if (zIndex == kSubdivision / 2) {
 			Novice::DrawLine(static_cast<int>(screenStartPos.x), static_cast<int>(screenStartPos.y), static_cast<int>(screenEndPos.x), static_cast<int>(screenEndPos.y), 0x000000FF);
 		}
@@ -118,11 +118,33 @@ void Draw::DrawPlane(const Plane& plane, Camera camera, uint32_t color)
 		points[index] = Transform(Transform(point, MakeprojectionMatrix(camera)), viewportMatrix);
 	}
 
+
 	Novice::DrawLine(static_cast<int>(points[0].x), static_cast<int>(points[0].y), static_cast<int>(points[2].x), static_cast<int>(points[2].y), color);
 	Novice::DrawLine(static_cast<int>(points[0].x), static_cast<int>(points[0].y), static_cast<int>(points[3].x), static_cast<int>(points[3].y), color);
 	Novice::DrawLine(static_cast<int>(points[1].x), static_cast<int>(points[1].y), static_cast<int>(points[2].x), static_cast<int>(points[2].y), color);
 	Novice::DrawLine(static_cast<int>(points[1].x), static_cast<int>(points[1].y), static_cast<int>(points[3].x), static_cast<int>(points[3].y), color);
 
+}
+
+void Draw::DrawLine(const Segment& line, Camera camera, uint32_t color)
+{
+	Matrix4x4 originWorldViewProjectiveMatrix;
+	Matrix4x4 diffWorldViewProjectiveMatrix;
+	Matrix4x4 originWorldMatrix;
+	Matrix4x4 diffWorldMatrix;
+	Segment ScreenLine;
+	originWorldMatrix = MakeAffineMatrix(line.origin, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
+	diffWorldMatrix = MakeAffineMatrix(line.diff, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
+
+	originWorldViewProjectiveMatrix = MultiplyMatrix4x4(originWorldMatrix,MakeprojectionMatrix(camera));
+	diffWorldViewProjectiveMatrix = MultiplyMatrix4x4(diffWorldMatrix, MakeprojectionMatrix(camera));
+	
+	ScreenLine.origin = Transform({ 1,1,1 }, originWorldViewProjectiveMatrix);
+	ScreenLine.diff = Transform({ 1,1,1 }, diffWorldViewProjectiveMatrix);
+
+	Novice::DrawLine(static_cast<int>(ScreenLine.origin.x), static_cast<int>(ScreenLine.origin.y), static_cast<int>(ScreenLine.diff.x), static_cast<int>(ScreenLine.diff.y), color);
+
+	Novice::ScreenPrintf(0, 0, "or =x=%f,y=%f di =x=%f ,y=%f", ScreenLine.origin.x, ScreenLine.origin.y, ScreenLine.diff.x, ScreenLine.diff.y);
 }
 
 Matrix4x4 Draw::MakeprojectionMatrix(Camera camera)
