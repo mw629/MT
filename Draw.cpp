@@ -77,7 +77,7 @@ void Draw::DrawGrid(Camera camera)
 		startVertex = Transform({ -2.0f,0.0f,0.0f }, worldViewProjectiveMatrix);
 		endVertex = Transform({ 2.0f,0.0f,0.0f }, worldViewProjectiveMatrix);
 		screenStartPos = Transform(startVertex, viewportMatrix);
-		screenEndPos = Transform(endVertex, viewportMatrix);;
+		screenEndPos = Transform(endVertex, viewportMatrix);
 		if (xIndex == kSubdivision / 2) {
 			Novice::DrawLine(static_cast<int>(screenStartPos.x), static_cast<int>(screenStartPos.y), static_cast<int>(screenEndPos.x), static_cast<int>(screenEndPos.y), 0x000000FF);
 		}
@@ -92,7 +92,7 @@ void Draw::DrawGrid(Camera camera)
 		startVertex = Transform({ 0.0f,0.0f,-2.0f }, worldViewProjectiveMatrix);
 		endVertex = Transform({ 0.0f,0.0f,2.0f }, worldViewProjectiveMatrix);
 		screenStartPos = Transform(startVertex, viewportMatrix);
-		screenEndPos = Transform(endVertex, viewportMatrix);;
+		screenEndPos = Transform(endVertex, viewportMatrix);
 		if (zIndex == kSubdivision / 2) {
 			Novice::DrawLine(static_cast<int>(screenStartPos.x), static_cast<int>(screenStartPos.y), static_cast<int>(screenEndPos.x), static_cast<int>(screenEndPos.y), 0x000000FF);
 		}
@@ -118,11 +118,22 @@ void Draw::DrawPlane(const Plane& plane, Camera camera, uint32_t color)
 		points[index] = Transform(Transform(point, MakeprojectionMatrix(camera)), viewportMatrix);
 	}
 
+
 	Novice::DrawLine(static_cast<int>(points[0].x), static_cast<int>(points[0].y), static_cast<int>(points[2].x), static_cast<int>(points[2].y), color);
 	Novice::DrawLine(static_cast<int>(points[0].x), static_cast<int>(points[0].y), static_cast<int>(points[3].x), static_cast<int>(points[3].y), color);
 	Novice::DrawLine(static_cast<int>(points[1].x), static_cast<int>(points[1].y), static_cast<int>(points[2].x), static_cast<int>(points[2].y), color);
 	Novice::DrawLine(static_cast<int>(points[1].x), static_cast<int>(points[1].y), static_cast<int>(points[3].x), static_cast<int>(points[3].y), color);
 
+}
+
+void Draw::DrawLine(const Segment& line, Camera camera, uint32_t color)
+{
+	Vector3 start = Transform(Transform(line.origin,MakeprojectionMatrix(camera)), GetViewPortMatrix());
+	Vector3 end = Transform(Transform(AddVector3(line.origin, line.diff),MakeprojectionMatrix(camera)),GetViewPortMatrix());
+
+	Novice::DrawLine(static_cast<int>(start.x), static_cast<int>(start.y), static_cast<int>(end.x), static_cast<int>(end.y), color);
+
+	
 }
 
 Matrix4x4 Draw::MakeprojectionMatrix(Camera camera)
