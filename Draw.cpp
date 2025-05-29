@@ -128,23 +128,12 @@ void Draw::DrawPlane(const Plane& plane, Camera camera, uint32_t color)
 
 void Draw::DrawLine(const Segment& line, Camera camera, uint32_t color)
 {
-	Matrix4x4 originWorldViewProjectiveMatrix;
-	Matrix4x4 diffWorldViewProjectiveMatrix;
-	Matrix4x4 originWorldMatrix;
-	Matrix4x4 diffWorldMatrix;
-	Segment ScreenLine;
-	originWorldMatrix = MakeAffineMatrix(line.origin, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
-	diffWorldMatrix = MakeAffineMatrix(line.diff, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
+	Vector3 start = Transform(Transform(line.origin,MakeprojectionMatrix(camera)), GetViewPortMatrix());
+	Vector3 end = Transform(Transform(AddVector3(line.origin, line.diff),MakeprojectionMatrix(camera)),GetViewPortMatrix());
 
-	originWorldViewProjectiveMatrix = MultiplyMatrix4x4(originWorldMatrix,MakeprojectionMatrix(camera));
-	diffWorldViewProjectiveMatrix = MultiplyMatrix4x4(diffWorldMatrix, MakeprojectionMatrix(camera));
+	Novice::DrawLine(static_cast<int>(start.x), static_cast<int>(start.y), static_cast<int>(end.x), static_cast<int>(end.y), color);
+
 	
-	ScreenLine.origin = Transform({ 0,0,0}, originWorldViewProjectiveMatrix);
-	ScreenLine.diff = Transform({ 0,0,0 }, diffWorldViewProjectiveMatrix);
-
-	Novice::DrawLine(static_cast<int>(ScreenLine.origin.x), static_cast<int>(ScreenLine.origin.y), static_cast<int>(ScreenLine.diff.x), static_cast<int>(ScreenLine.diff.y), color);
-
-	Novice::ScreenPrintf(0, 0, "or =x=%f,y=%f di =x=%f ,y=%f", ScreenLine.origin.x, ScreenLine.origin.y, ScreenLine.diff.x, ScreenLine.diff.y);
 }
 
 Matrix4x4 Draw::MakeprojectionMatrix(Camera camera)

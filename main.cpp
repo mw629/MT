@@ -63,7 +63,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	camera.scale = { 1.0f,1.0f,1.0f };
 	camera.rotate = { 0.26f,0.0f,0.0f };
 
-	Segment line = { {0,0,0}, {640,360,0} };
+	Segment line = { {-1,-1,0}, {1,1,0} };
 	Plane plane = { {0.0f,1.0f,0.0f},1.0f };
 
 	// ウィンドウの×ボタンが押されるまでループ
@@ -83,7 +83,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::DragFloat3("cameraTranslate", &camera.pos.x, 0.01f);
 		ImGui::DragFloat3("cameraRotate", &camera.rotate.x, 0.01f);
 
-
+		ImGui::DragFloat3("line", &line.origin.x, 0.01f);
+		ImGui::DragFloat3("line", &line.diff.x, 0.01f);
 		ImGui::DragFloat3("line.origin", &line.origin.x, 0.01f);
 		ImGui::DragFloat3("line.diff", &line.diff.x, 0.01f);
 
@@ -106,10 +107,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		draw->DrawGrid(camera);
 		if (IsCollision(plane, line)) {
-			Novice::DrawLine(static_cast<int>(line.origin.x), static_cast<int>(line.origin.y), static_cast<int>(line.diff.x), static_cast<int>(line.diff.y), RED);
+			draw->DrawLine(line, camera, RED);
 		}
 		else {
-			Novice::DrawLine(static_cast<int>(line.origin.x), static_cast<int>(line.origin.y), static_cast<int>(line.diff.x), static_cast<int>(line.diff.y), BLACK);
+			draw->DrawLine(line, camera, BLACK);
 		}
 		draw->DrawPlane(plane, camera, BLACK);
 
