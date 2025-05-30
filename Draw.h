@@ -35,6 +35,8 @@ public:
 	void DrawLine(const Segment& line, Camera camera, uint32_t color);
 	//三角形の描画
 	void DrawTriangle(const Triangle& triangle, Camera camera, uint32_t color, FillMode fillMode);
+	//AABBの描画
+	void DrawAABB(const AABB& aabb, Camera camera, uint32_t color);
 
 	Matrix4x4 MakeprojectionMatrix(Camera camera);
 

@@ -65,6 +65,14 @@ bool IsCollision(const Triangle& triangle, const Segment& line) {
 	return false;
 }
 
+bool IsCollision(const AABB& aabb1, const AABB& aabb2) {
+	if (aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x &&
+		aabb1.min.y <= aabb2.max.y && aabb1.max.y >= aabb2.min.y &&
+		aabb1.min.z <= aabb2.max.z && aabb1.max.z >= aabb2.min.z) {
+		return true;
+	}
+	return false;
+}
 
 
 // Windowsアプリでのエントリーポイント(main関数)
@@ -85,8 +93,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	camera.scale = { 1.0f,1.0f,1.0f };
 	camera.rotate = { 0.26f,0.0f,0.0f };
 
-	Triangle triangle = { Vector3{-1.0f,0.0f,0.0f},Vector3{0.0f,1.0f,0.0f }, Vector3{ 1.0f,0.0f,0.0f } };
-	Segment line = { {-1,-1,0}, {1,1,0} };
+	AABB aabb1 = { {-0.1f,-0.1f,-0.1f} ,{-0.5f,-0.5f,-0.5f} };
+	AABB aabb2 = { {0,0,0} ,{0.5f,0.5f,0.5f} };
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -105,14 +113,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::DragFloat3("cameraTranslate", &camera.pos.x, 0.01f);
 		ImGui::DragFloat3("cameraRotate", &camera.rotate.x, 0.01f);
 
-		ImGui::DragFloat3("line", &line.origin.x, 0.01f);
-		ImGui::DragFloat3("line", &line.diff.x, 0.01f);
-		ImGui::DragFloat3("line.origin", &line.origin.x, 0.01f);
-		ImGui::DragFloat3("line.diff", &line.diff.x, 0.01f);
-
-		ImGui::DragFloat3("triangle[0]", &triangle.vertices[0].x, 0.01f);
-		ImGui::DragFloat3("triangle[1]", &triangle.vertices[1].x, 0.01f);
-		ImGui::DragFloat3("triangle[2]", &triangle.vertices[2].x, 0.01f);
+		ImGui::DragFloat3("aabb1.min", &aabb1.min.x, 0.01f);
+		ImGui::DragFloat3("aabb1.max", &aabb1.max.x, 0.01f);
+		ImGui::DragFloat3("aabb2.min", &aabb2.min.x, 0.01f);
+		ImGui::DragFloat3("aabb2.max", &aabb2.max.x, 0.01f);
+		
 		ImGui::End();
 
 
@@ -128,13 +133,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		draw->DrawGrid(camera);
-		if (IsCollision(triangle, line)) {
-			draw->DrawLine(line, camera, RED);
+		if(IsCollision(aabb1,aabb2)){
+			draw->DrawAABB(aabb1, camera, RED);
 		}
-		else {
-			draw->DrawLine(line, camera, BLACK);
+		else{
+			draw->DrawAABB(aabb1, camera, WHITE);
 		}
-		draw->DrawTriangle(triangle, camera, BLACK,kFillModeWireFrame);
+		draw->DrawAABB(aabb2, camera, WHITE);
+		
 
 		///
 		/// ↑描画処理ここまで

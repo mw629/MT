@@ -148,6 +148,43 @@ void Draw::DrawTriangle(const Triangle& triangle, Camera camera, uint32_t color,
 		static_cast<int>(vertices[2].x), static_cast<int>(vertices[2].y), color, fillMode);
 }
 
+void Draw::DrawAABB(const AABB& aabb, Camera camera, uint32_t color)
+{
+	Vector3 vertices[8];
+	Vector3 line = aabb.max - aabb.min;
+
+	//底面
+	vertices[0] = aabb.min + Vector3{ 0,0,line.z };//左上
+	vertices[1] = aabb.min;//左下
+	vertices[2] = aabb.min + Vector3{ line.x,0,0 };//右下
+	vertices[3] = aabb.min + Vector3{ line.x,0,line.z };//上
+	//上面
+	vertices[4] = aabb.max - Vector3{ line.x,0,0 };;//左上
+	vertices[5] = aabb.max - Vector3{ line.x,0,line.z };//左下
+	vertices[6] = aabb.max - Vector3{ 0,0,line.z };//右下
+	vertices[7] = aabb.max;//右上
+
+	for (int i = 0; i < 8; i++) {
+		vertices[i] = Transform(Transform(vertices[i], MakeprojectionMatrix(camera)), GetViewPortMatrix());
+	}
+
+	for (int i = 0; i < 3; i++) {
+		Novice::DrawLine(static_cast<int>(vertices[i].x), static_cast<int>(vertices[i].y),
+			static_cast<int>(vertices[i+1].x), static_cast<int>(vertices[i+1].y), color);
+		Novice::DrawLine(static_cast<int>(vertices[i+4].x), static_cast<int>(vertices[i+4].y),
+			static_cast<int>(vertices[i + 5].x), static_cast<int>(vertices[i + 5].y), color);
+		Novice::DrawLine(static_cast<int>(vertices[i].x), static_cast<int>(vertices[i].y),
+			static_cast<int>(vertices[i + 4].x), static_cast<int>(vertices[i + 4].y), color);
+	}
+	Novice::DrawLine(static_cast<int>(vertices[3].x), static_cast<int>(vertices[3].y),
+		static_cast<int>(vertices[0].x), static_cast<int>(vertices[0].y), color);
+	Novice::DrawLine(static_cast<int>(vertices[7].x), static_cast<int>(vertices[7].y),
+		static_cast<int>(vertices[4].x), static_cast<int>(vertices[4].y), color);
+	Novice::DrawLine(static_cast<int>(vertices[3].x), static_cast<int>(vertices[3].y),
+		static_cast<int>(vertices[7].x), static_cast<int>(vertices[7].y), color);
+
+}
+
 Matrix4x4 Draw::MakeprojectionMatrix(Camera camera)
 {
 	cameraMatrix = MakeAffineMatrix(camera.pos, camera.scale, camera.rotate);
