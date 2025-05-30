@@ -5,6 +5,7 @@
 
 #include "Calculation.h"
 #include "Draw.h"
+#include <algorithm>
 
 #define M_PI 3.14f
 
@@ -50,8 +51,8 @@ bool IsCollision(const Triangle& triangle, const Segment& line) {
 	Vector3 cross01 = Cross(SubtractVector3(triangle.vertices[0], triangle.vertices[1]), ClosestPoint(triangle.vertices[1], line));
 	Vector3 cross02 = Cross(SubtractVector3(triangle.vertices[1], triangle.vertices[2]), ClosestPoint(triangle.vertices[2], line));
 	Vector3 cross03 = Cross(SubtractVector3(triangle.vertices[2], triangle.vertices[0]), ClosestPoint(triangle.vertices[0], line));
-	
-	
+
+
 	Vector3 edge1 = triangle.vertices[1] - triangle.vertices[0];
 	Vector3 edge2 = triangle.vertices[2] - triangle.vertices[0];
 
@@ -75,6 +76,24 @@ bool IsCollision(const AABB& aabb1, const AABB& aabb2) {
 }
 
 
+bool IsCollision(const AABB& aabb, const Sphere& sphere) {
+
+	Vector3 closetPoint;
+
+	closetPoint.x={ std::clamp(sphere.center.x,aabb.min.x,aabb.max.x) };
+	closetPoint.y={ std::clamp(sphere.center.y,aabb.min.y,aabb.max.y) };
+	closetPoint.z={ std::clamp(sphere.center.z,aabb.min.z,aabb.max.z) };
+
+	float distance = Lengeh(closetPoint - sphere.center);
+
+	if (distance <= sphere.radius) {
+		return true;
+	}
+
+
+	return false;
+}
+
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
@@ -93,8 +112,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	camera.scale = { 1.0f,1.0f,1.0f };
 	camera.rotate = { 0.26f,0.0f,0.0f };
 
-	AABB aabb1 = { {-0.1f,-0.1f,-0.1f} ,{-0.5f,-0.5f,-0.5f} };
-	AABB aabb2 = { {0,0,0} ,{0.5f,0.5f,0.5f} };
+	AABB aabb = { {-0.1f,-0.1f,-0.1f} ,{0.5f,0.5f,0.5f} };
+	Sphere sphere = { {0,0,0},0.5f };
+
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -113,11 +133,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::DragFloat3("cameraTranslate", &camera.pos.x, 0.01f);
 		ImGui::DragFloat3("cameraRotate", &camera.rotate.x, 0.01f);
 
-		ImGui::DragFloat3("aabb1.min", &aabb1.min.x, 0.01f);
-		ImGui::DragFloat3("aabb1.max", &aabb1.max.x, 0.01f);
-		ImGui::DragFloat3("aabb2.min", &aabb2.min.x, 0.01f);
-		ImGui::DragFloat3("aabb2.max", &aabb2.max.x, 0.01f);
-		
+		ImGui::DragFloat3("aabb", &aabb.min.x, 0.01f);
+		ImGui::DragFloat3("aabb", &aabb.max.x, 0.01f);
+		//ImGui::DragFloat3("aabb.min", &aabb.min.x, 0.01f);
+		//ImGui::DragFloat3("aabb.max", &aabb.max.x, 0.01f);
+
+		ImGui::DragFloat3("center", &sphere.center.x, 0.01f);
+		ImGui::DragFloat("rdius", &sphere.radius, 0.01f);
 		ImGui::End();
 
 
@@ -133,14 +155,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		draw->DrawGrid(camera);
-		if(IsCollision(aabb1,aabb2)){
-			draw->DrawAABB(aabb1, camera, RED);
+		if (IsCollision(aabb, sphere)) {
+			draw->DrawAABB(aabb, camera, RED);
 		}
-		else{
-			draw->DrawAABB(aabb1, camera, WHITE);
+		else {
+			draw->DrawAABB(aabb, camera, WHITE);
 		}
-		draw->DrawAABB(aabb2, camera, WHITE);
-		
+		draw->DrawSphere(sphere, camera, WHITE);
+
 
 		///
 		/// ↑描画処理ここまで
