@@ -37,6 +37,8 @@ public:
 	void DrawTriangle(const Triangle& triangle, Camera camera, uint32_t color, FillMode fillMode);
 	//AABBの描画
 	void DrawAABB(const AABB& aabb, Camera camera, uint32_t color);
+	//ベジェ曲線の描画
+	void DrawBezierCurve(BezierCurve bezierCurve, Camera camera, uint32_t color);
 
 	Matrix4x4 MakeprojectionMatrix(Camera camera);
 

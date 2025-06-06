@@ -36,9 +36,9 @@ bool IsCollision(const Plane& plane, const Segment& line) {
 
 bool IsCollision(const Triangle& triangle, const Segment& line) {
 
-	Vector3 cross01 = Cross(SubtractVector3(triangle.vertices[0], triangle.vertices[1]), ClosestPoint(triangle.vertices[1], line));
-	Vector3 cross02 = Cross(SubtractVector3(triangle.vertices[1], triangle.vertices[2]), ClosestPoint(triangle.vertices[2], line));
-	Vector3 cross03 = Cross(SubtractVector3(triangle.vertices[2], triangle.vertices[0]), ClosestPoint(triangle.vertices[0], line));
+	Vector3 cross01 = Cross(Subtract(triangle.vertices[0], triangle.vertices[1]), ClosestPoint(triangle.vertices[1], line));
+	Vector3 cross02 = Cross(Subtract(triangle.vertices[1], triangle.vertices[2]), ClosestPoint(triangle.vertices[2], line));
+	Vector3 cross03 = Cross(Subtract(triangle.vertices[2], triangle.vertices[0]), ClosestPoint(triangle.vertices[0], line));
 
 
 	Vector3 edge1 = triangle.vertices[1] - triangle.vertices[0];

@@ -35,7 +35,7 @@ void Draw::DrawSphere(const Sphere& sphere, Camera camera, uint32_t color) {
 
 
 			Matrix4x4 worldMatrix = MakeAffineMatrix(sphere.center, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
-			Matrix4x4 worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, MakeprojectionMatrix(camera));
+			Matrix4x4 worldViewProjectiveMatrix = Multiply(worldMatrix, MakeprojectionMatrix(camera));
 
 			VertexA = Transform(a * sphere.radius, worldViewProjectiveMatrix);
 			VertexB = Transform(b * sphere.radius, worldViewProjectiveMatrix);
@@ -73,7 +73,7 @@ void Draw::DrawGrid(Camera camera)
 	for (uint32_t xIndex = 0; xIndex <= kSubdivision; ++xIndex) {
 		pos = { 0.0f ,0.0f,2.0f - kGridEvery * xIndex };
 		worldMatrix = MakeAffineMatrix(pos, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
-		worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, MakeprojectionMatrix(camera));
+		worldViewProjectiveMatrix = Multiply(worldMatrix, MakeprojectionMatrix(camera));
 		startVertex = Transform({ -2.0f,0.0f,0.0f }, worldViewProjectiveMatrix);
 		endVertex = Transform({ 2.0f,0.0f,0.0f }, worldViewProjectiveMatrix);
 		screenStartPos = Transform(startVertex, viewportMatrix);
@@ -88,7 +88,7 @@ void Draw::DrawGrid(Camera camera)
 	for (uint32_t zIndex = 0; zIndex <= kSubdivision; ++zIndex) {
 		pos = { 2.0f - kGridEvery * zIndex ,0.0f,0.0f };
 		worldMatrix = MakeAffineMatrix(pos, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
-		worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, MakeprojectionMatrix(camera));
+		worldViewProjectiveMatrix = Multiply(worldMatrix, MakeprojectionMatrix(camera));
 		startVertex = Transform({ 0.0f,0.0f,-2.0f }, worldViewProjectiveMatrix);
 		endVertex = Transform({ 0.0f,0.0f,2.0f }, worldViewProjectiveMatrix);
 		screenStartPos = Transform(startVertex, viewportMatrix);
@@ -104,7 +104,7 @@ void Draw::DrawGrid(Camera camera)
 
 void Draw::DrawPlane(const Plane& plane, Camera camera, uint32_t color)
 {
-	Vector3 center = ScalarMultiply(plane.normal, plane.distance);
+	Vector3 center = Multiply(plane.normal, plane.distance);
 	Vector3 Perpendiculars[4];
 	Perpendiculars[0] = Normalize(Perpendicular(plane.normal));
 	Perpendiculars[1] = { -Perpendiculars[0].x,-Perpendiculars[0].y,-Perpendiculars[0].z };
@@ -113,8 +113,8 @@ void Draw::DrawPlane(const Plane& plane, Camera camera, uint32_t color)
 
 	Vector3 points[4];
 	for (int32_t index = 0; index < 4; ++index) {
-		Vector3 extend = ScalarMultiply(Perpendiculars[index], 2.0f);
-		Vector3 point = AddVector3(center, extend);
+		Vector3 extend = Multiply(Perpendiculars[index], 2.0f);
+		Vector3 point = Add(center, extend);
 		points[index] = Transform(Transform(point, MakeprojectionMatrix(camera)), viewportMatrix);
 	}
 
@@ -129,7 +129,7 @@ void Draw::DrawPlane(const Plane& plane, Camera camera, uint32_t color)
 void Draw::DrawLine(const Segment& line, Camera camera, uint32_t color)
 {
 	Vector3 start = Transform(Transform(line.origin, MakeprojectionMatrix(camera)), GetViewPortMatrix());
-	Vector3 end = Transform(Transform(AddVector3(line.origin, line.diff), MakeprojectionMatrix(camera)), GetViewPortMatrix());
+	Vector3 end = Transform(Transform(Add(line.origin, line.diff), MakeprojectionMatrix(camera)), GetViewPortMatrix());
 
 	Novice::DrawLine(static_cast<int>(start.x), static_cast<int>(start.y), static_cast<int>(end.x), static_cast<int>(end.y), color);
 
@@ -170,8 +170,8 @@ void Draw::DrawAABB(const AABB& aabb, Camera camera, uint32_t color)
 
 	for (int i = 0; i < 3; i++) {
 		Novice::DrawLine(static_cast<int>(vertices[i].x), static_cast<int>(vertices[i].y),
-			static_cast<int>(vertices[i+1].x), static_cast<int>(vertices[i+1].y), color);
-		Novice::DrawLine(static_cast<int>(vertices[i+4].x), static_cast<int>(vertices[i+4].y),
+			static_cast<int>(vertices[i + 1].x), static_cast<int>(vertices[i + 1].y), color);
+		Novice::DrawLine(static_cast<int>(vertices[i + 4].x), static_cast<int>(vertices[i + 4].y),
 			static_cast<int>(vertices[i + 5].x), static_cast<int>(vertices[i + 5].y), color);
 		Novice::DrawLine(static_cast<int>(vertices[i].x), static_cast<int>(vertices[i].y),
 			static_cast<int>(vertices[i + 4].x), static_cast<int>(vertices[i + 4].y), color);
@@ -185,18 +185,43 @@ void Draw::DrawAABB(const AABB& aabb, Camera camera, uint32_t color)
 
 }
 
+void Draw::DrawBezierCurve(BezierCurve bezierCurve, Camera camera, uint32_t color)
+{
+	float t = 0;
+	while(t<1){
+		Vector3 p0p1 = Lerp(bezierCurve.start, bezierCurve.controlPoint, t);
+		Vector3 p1p2 = Lerp(bezierCurve.controlPoint, bezierCurve.end, t);
+		Vector3 p = Lerp(p0p1, p1p2, t);
+		Vector3 point1 = Transform(Transform(p, MakeprojectionMatrix(camera)), GetViewPortMatrix());
+		t += 1.0f / 1000;
+		p0p1 = Lerp(bezierCurve.start, bezierCurve.controlPoint, t);
+		p1p2 = Lerp(bezierCurve.controlPoint, bezierCurve.end, t);
+		p = Lerp(p0p1, p1p2, t);
+		Vector3 point2 = Transform(Transform(p, MakeprojectionMatrix(camera)), GetViewPortMatrix());
+		Novice::DrawLine(static_cast<int>(point1.x), static_cast<int>(point1.y), static_cast<int>(point2.x), static_cast<int>(point2.y), color);
+	}
+	Vector3 pos[3];
+	pos[0] = bezierCurve.start;
+	pos[1] = bezierCurve.controlPoint;
+	pos[2] = bezierCurve.end;
+	for (int i = 0; i < 3; i++) {
+		Vector3 point1 = Transform(Transform(pos[i], MakeprojectionMatrix(camera)), GetViewPortMatrix());
+		Novice::DrawEllipse(static_cast<int>(point1.x), static_cast<int>(point1.y), 3,3,0.0f,BLACK,kFillModeSolid);
+	}
+}
+
 Matrix4x4 Draw::MakeprojectionMatrix(Camera camera)
 {
 	cameraMatrix = MakeAffineMatrix(camera.pos, camera.scale, camera.rotate);
-	viewMatrix = InverseMatrix4x4(cameraMatrix);
+	viewMatrix = Inverse(cameraMatrix);
 	projectionMatrix = MakePerspectiveFovMatrix(0.45f, 1280.0f / 720.0f, 0.1f, 100.0f);
 
-	return MultiplyMatrix4x4(viewMatrix, projectionMatrix);
+	return Multiply(viewMatrix, projectionMatrix);
 }
 
 Matrix4x4 Draw::Renderingpipeline(Camera camera, Object object)
 {
 	Matrix4x4 worldMatrix = MakeAffineMatrix(object.pos, object.scale, object.rotate);
-	Matrix4x4 worldViewProjectiveMatrix = MultiplyMatrix4x4(worldMatrix, MakeprojectionMatrix(camera));
+	Matrix4x4 worldViewProjectiveMatrix = Multiply(worldMatrix, MakeprojectionMatrix(camera));
 	return worldViewProjectiveMatrix;
 }
