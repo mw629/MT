@@ -41,7 +41,7 @@ float AbsValue(float a)
 
 // ベクトル
 
-Vector3 AddVector3(Vector3 v1, Vector3 v2)
+Vector3 Add(Vector3 v1, Vector3 v2)
 {
 	Vector3 result;
 	result.x = v1.x + v2.x;
@@ -50,7 +50,7 @@ Vector3 AddVector3(Vector3 v1, Vector3 v2)
 	return result;
 }
 
-Vector3 SubtractVector3(Vector3 v1, Vector3 v2)
+Vector3 Subtract(Vector3 v1, Vector3 v2)
 {
 	Vector3 result;
 	result.x = v1.x - v2.x;
@@ -59,7 +59,7 @@ Vector3 SubtractVector3(Vector3 v1, Vector3 v2)
 	return result;
 }
 
-Vector3 MultiplyVector3(Vector3 v1, Vector3 v2)
+Vector3 Multiply(Vector3 v1, Vector3 v2)
 {
 	Vector3 result;
 	result.x = v1.x * v2.x;
@@ -68,7 +68,7 @@ Vector3 MultiplyVector3(Vector3 v1, Vector3 v2)
 	return result;
 }
 
-Vector3 ScalarMultiply(Vector3 v, float s)
+Vector3 Multiply(Vector3 v, float s)
 {
 	Vector3 result;
 	result = { v.x * s,v.y * s,v.z * s };
@@ -125,12 +125,21 @@ Vector3 ClosestPoint(const Vector3& point, const Segment& segment)
 	return result;
 }
 
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t)
+{
+	Vector3 vector;
+	vector.x = (1 - t) * v1.x + t * v2.x;
+	vector.y = (1 - t) * v1.y + t * v2.y;
+	vector.z = (1 - t) * v1.z + t * v2.z;
+	return vector;
+}
+
 
 
 
 // 行列
 
-Matrix4x4 AddMatrix4x4(Matrix4x4 m1, Matrix4x4 m2)//o
+Matrix4x4 Add(Matrix4x4 m1, Matrix4x4 m2)//o
 {
 	Matrix4x4 result;
 	for (int i = 0; i < 4; i++)
@@ -143,7 +152,7 @@ Matrix4x4 AddMatrix4x4(Matrix4x4 m1, Matrix4x4 m2)//o
 	return result;
 }
 
-Matrix4x4 MultiplyMatrix4x4(Matrix4x4 m1, Matrix4x4 m2)//o
+Matrix4x4 Multiply(Matrix4x4 m1, Matrix4x4 m2)//o
 {
 	Matrix4x4 result;
 	for (int i = 0; i < 4; i++)
@@ -160,7 +169,7 @@ Matrix4x4 MultiplyMatrix4x4(Matrix4x4 m1, Matrix4x4 m2)//o
 	return result;
 }
 
-Matrix4x4 TransposeMatrix4x4(Matrix4x4 m)//o
+Matrix4x4 Transpose(Matrix4x4 m)//o
 {
 	Matrix4x4 result;
 	for (int i = 0; i < 4; i++)
@@ -173,7 +182,7 @@ Matrix4x4 TransposeMatrix4x4(Matrix4x4 m)//o
 	return result;
 }
 
-Matrix4x4 InverseMatrix4x4(Matrix4x4 m)
+Matrix4x4 Inverse(Matrix4x4 m)
 {
 	Matrix4x4 result;
 
@@ -264,7 +273,7 @@ Matrix4x4 InverseMatrix4x4(Matrix4x4 m)
 	return result;
 }
 
-Matrix4x4 ScaleMultiplyMatrix4x4(Matrix4x4 m, float s)
+Matrix4x4 Multiply(Matrix4x4 m, float s)
 {
 	Matrix4x4 result;
 	for (int i = 0; i < 4; i++)
@@ -343,7 +352,7 @@ Matrix4x4 RotationZ(float angle)
 Matrix4x4 Rotation(Vector3 angle)
 {
 	Matrix4x4 result;
-	result = MultiplyMatrix4x4(RotationX(angle.x), MultiplyMatrix4x4(RotationY(angle.y), RotationZ(angle.z)));
+	result = Multiply(RotationX(angle.x), Multiply(RotationY(angle.y), RotationZ(angle.z)));
 	return result;
 }
 

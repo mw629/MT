@@ -30,7 +30,7 @@ float AbsValue(float a);
 /// <param name="v1">ベクトル1</param>
 /// <param name="v2">ベクトル2</param>
 ///  <returns>ベクトルの各要素を足し合わせた結果を返します。 </returns>
-Vector3 AddVector3(Vector3 v1, Vector3 v2);
+Vector3 Add(Vector3 v1, Vector3 v2);
 
 /// <summary>
 /// この関数は、2つのベクトルの差を計算します。
@@ -38,7 +38,7 @@ Vector3 AddVector3(Vector3 v1, Vector3 v2);
 /// <param name="v1">ベクトル1</param>
 /// <param name="v2">ベクトル2</param>
 ///  <returns>ベクトルの各要素を引いた結果を返します。 </returns>
-Vector3 SubtractVector3(Vector3 v1, Vector3 v2);
+Vector3 Subtract(Vector3 v1, Vector3 v2);
 
 /// <summary>
 /// この関数は二つのベクトルの積を計算します
@@ -46,7 +46,7 @@ Vector3 SubtractVector3(Vector3 v1, Vector3 v2);
 /// <param name="v1">ベクトル１</param>
 /// <param name="v2">ベクトル２</param>
 /// <returns>ベクトルの各要素を掛けた結果を返します</returns>
-Vector3 MultiplyVector3(Vector3 v1, Vector3 v2);
+Vector3 Multiply(Vector3 v1, Vector3 v2);
 
 /// <summary>
 /// この関数は、指定されたスカラー倍をベクトルの各要素に適用します。
@@ -54,7 +54,7 @@ Vector3 MultiplyVector3(Vector3 v1, Vector3 v2);
 /// <param name="v">ベクトル</param>
 /// <param name="s">スカラー値</param>
 /// <returns>スカラー倍された新しいベクトル</returns>
-Vector3 ScalarMultiply(Vector3 v, float s);
+Vector3 Multiply(Vector3 v, float s);
 
 /// <summary>
 /// この関数は、ベクトルの長さを計算します。
@@ -101,6 +101,14 @@ Vector3 ProjectionVector(const Vector3& v1, const Vector3& v2);
 /// </summary>
 Vector3 ClosestPoint(const Vector3& point, const Segment& segment);
 
+/// <summary>
+/// 線形補間
+/// </summary>
+/// <param name="v1"></param>
+/// <param name="v2"></param>
+/// <param name="t"></param>
+/// <returns></returns>
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
 
 //行列の計算
 
@@ -110,7 +118,7 @@ Vector3 ClosestPoint(const Vector3& point, const Segment& segment);
 /// <param name="m1">行列1</param>
 /// <param name="m2">行列2</param>
 /// <returns>2つの行列の和</returns>
-Matrix4x4 AddMatrix4x4(Matrix4x4 m1, Matrix4x4 m2);
+Matrix4x4 Add(Matrix4x4 m1, Matrix4x4 m2);
 
 
 /// <summary>
@@ -119,7 +127,7 @@ Matrix4x4 AddMatrix4x4(Matrix4x4 m1, Matrix4x4 m2);
 /// <param name="m1">行列1</param>
 /// <param name="m2">行列2</param>
 /// <returns>2つの行列の積</returns>
-Matrix4x4 MultiplyMatrix4x4(Matrix4x4 m1, Matrix4x4 m2);
+Matrix4x4 Multiply(Matrix4x4 m1, Matrix4x4 m2);
 
 /// <summary>
 /// この関数は、行列にスカラー倍を適用します。
@@ -127,14 +135,14 @@ Matrix4x4 MultiplyMatrix4x4(Matrix4x4 m1, Matrix4x4 m2);
 /// <param name="m">行列</param>
 /// <param name="s">スカラー値</param>
 /// <returns>スカラー倍された行列</returns>
-Matrix4x4 ScaleMultiplyMatrix4x4(Matrix4x4 m, float s);
+Matrix4x4 Multiply(Matrix4x4 m, float s);
 
 /// <summary>
 /// この関数は、行列の転置を計算します。
 /// </summary>
 /// <param name="m">行列</param>
 /// <returns>転置された行列</returns>
-Matrix4x4 TransposeMatrix4x4(Matrix4x4 m);
+Matrix4x4 Transpose(Matrix4x4 m);
 
 
 /// <summary>
@@ -142,7 +150,7 @@ Matrix4x4 TransposeMatrix4x4(Matrix4x4 m);
 /// </summary>
 /// <param name="m">行列</param>
 /// <returns>逆行列</returns>
-Matrix4x4 InverseMatrix4x4(Matrix4x4 m);
+Matrix4x4 Inverse(Matrix4x4 m);
 
 /// <summary>
 /// この関数は、ベクトルを行列で変換します。
@@ -204,11 +212,6 @@ Matrix4x4 Rotation(Vector3 angle);//不安
 /// <param name="m">行列</param>
 Matrix4x4 Translation(Vector3 pos);
 
-/// <summary>
-/// 単位行列
-/// </summary>
-/// <returns></returns>
-Matrix4x4 MakeIdentity4x4();
 
 
 /// <summary>

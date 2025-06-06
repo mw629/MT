@@ -36,8 +36,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	camera.scale = { 1.0f,1.0f,1.0f };
 	camera.rotate = { 0.26f,0.0f,0.0f };
 
-	AABB aabb = { {-0.5f,-0.5f,-0.5f} ,{0.5f,0.5f,0.5f} };
-	Segment segment = { {-0.7f,0.3f,0.0f},{2.0f,-0.5f,0.0f} };
+	BezierCurve bezierCurve =
+	{
+		{-0.8f,0.58f,1.0f},
+		{1.76f,1.0f,-0.3f},
+		{0.94f,0.7f,2.3f}
+	};
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -53,16 +57,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		ImGui::Begin("window");
-		ImGui::DragFloat3("cameraTranslate", &camera.pos.x, 0.01f);
-		ImGui::DragFloat3("cameraRotate", &camera.rotate.x, 0.01f);
-
-		ImGui::DragFloat3("aabb", &aabb.min.x, 0.01f);
-		ImGui::DragFloat3("aabb", &aabb.max.x, 0.01f);
-		ImGuiLine(segment);
-
+		ImGuiCamera(camera);
+		ImGuiBezierCurve(bezierCurve);
 		ImGui::End();
+		draw->DrawGrid(camera);
 
-
+		draw->DrawBezierCurve(bezierCurve, camera, BLUE);
+		
 
 
 
@@ -74,14 +75,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		draw->DrawGrid(camera);
-		if (IsCollision(aabb, segment)) {
-			draw->DrawAABB(aabb, camera, RED);
-		}
-		else {
-			draw->DrawAABB(aabb, camera, WHITE);
-		}
-		draw->DrawLine(segment, camera, WHITE);
+		
 
 
 		///
