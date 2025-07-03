@@ -36,21 +36,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	camera.scale = { 1.0f,1.0f,1.0f };
 	camera.rotate = { 0.26f,0.0f,0.0f };
 
-	Object point[3] = {
-		{{0.2f,1.0f,0.0f},
-		{1.0f,1.0f,1.0f},
-		{0.0f,0.0f,-6.8f},},
-		{{0.4f,0.0f,0.0f},
+	Vector3 translate[3] = {
+		{0.2f,1.0f,0.0f},
+		{0.4f,0.0f,0.0f},
+		{0.3f,0.0f,0.0f}
+	};
+	Vector3 rorares[3] = {
+		{0.0f,0.0f,-6.8f},
 		{0.0f,0.0f,-1.4f},
-		{0.0f,0.0f,0.0f},},
-		{{0.3f,0.0f,0.0f},
-		{0.0f,0.0f,0.0f},
-		{1.0f,1.0f,1.0f},},
+		{0.0f,0.0f,0.0f}
+	};
+	Vector3 scales[3] = {
+		{1.0f,1.0f,1.0f},
+		{1.0f,1.0f,1.0f},
+		{1.0f,1.0f,1.0f}
 	};
 
-	Matrix4x4 worldMatrix;
-	Matrix4x4 projectionMatrix;
-	Matrix4x4 worldViewProjectiveMatrix[3];
+
+	Matrix4x4 affine[3];
+
 	Vector3 drawPos[3];
 
 	// ウィンドウの×ボタンが押されるまでループ
@@ -67,37 +71,41 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		ImGui::Begin("window");
-		ImGuiCamera(camera);
-		if (ImGui::CollapsingHeader("point1")) {
-			ImGui::DragFloat3("Shoulder.pos", &point[0].pos.x, 0.01f);
-			ImGui::DragFloat3("Elbow.rotate", &point[0].rotate.x, 0.01f);
-			ImGui::DragFloat3("Hand.scale", &point[0].scale.x, 0.01f);
+
+		if (ImGui::CollapsingHeader("Shoulder")) {
+			ImGui::SliderFloat4("Stranslate", &translate[0].x, -10.0f, 10.0f);
+			ImGui::SliderFloat4("Srorares", &rorares[0].x, -10.0f, 10.0f);
+			ImGui::SliderFloat4("Sscales", &scales[0].x, -10.0f, 10.0f);
 		}
-		if (ImGui::CollapsingHeader("point1")) {
-			ImGui::DragFloat3("Shoulder.pos", &point[1].pos.x, 0.01f);
-			ImGui::DragFloat3("Elbow.rotate", &point[1].rotate.x, 0.01f);
-			ImGui::DragFloat3("Hand.scale", &point[1].scale.x, 0.01f);
+		if (ImGui::CollapsingHeader("Elbow")) {
+			ImGui::SliderFloat4("Etranslate", &translate[1].x, -10.0f, 10.0f);
+			ImGui::SliderFloat4("Erorares", &rorares[1].x, -10.0f, 10.0f);
+			ImGui::SliderFloat4("Escales", &scales[1].x, -10.0f, 10.0f);
 		}
-		if (ImGui::CollapsingHeader("point3")) {
-			ImGui::DragFloat3("Shoulder.pos", &point[2].pos.x, 0.01f);
-			ImGui::DragFloat3("Elbow.rotate", &point[2].rotate.x, 0.01f);
-			ImGui::DragFloat3("Hand.scale", &point[2].scale.x, 0.01f);
+
+		if (ImGui::CollapsingHeader("Hand")) {
+			ImGui::SliderFloat4("HStranslate", &translate[2].x, -10.0f, 10.0f);
+			ImGui::SliderFloat4("Hrorares", &rorares[2].x, -10.0f, 10.0f);
+			ImGui::SliderFloat4("Hscales", &scales[2].x, -10.0f, 10.0f);
 		}
-		ImGui::DragFloat3("pos1", &drawPos[0].x, 0.01f);
-		ImGui::DragFloat3("pos2", &drawPos[1].x, 0.01f);
-		ImGui::DragFloat3("pos3", &drawPos[2].x, 0.01f);
+
+		if (ImGui::CollapsingHeader("pos")) {
+			ImGui::SliderFloat4("Spos", &drawPos[0].x, 0.0f, 1.0f);
+			ImGui::SliderFloat4("Epos", &drawPos[1].x, 0.0f, 1.0f);
+			ImGui::SliderFloat4("Hpos", &drawPos[2].x, 0.0f, 1.0f);
+		}
 
 		ImGui::End();
-		draw->DrawGrid(camera);
 
-		worldMatrix= MakeAffineMatrix(point[0].pos, point[0].scale, point[0].rotate);
-		projectionMatrix = draw->MakeprojectionMatrix(camera);
 
-		worldViewProjectiveMatrix[0] = Multiply(worldMatrix, draw->MakeprojectionMatrix(camera));
-
-		drawPos[0] = Transform(Vector3(0, 0, 0), Multiply(worldViewProjectiveMatrix,draw->GetViewPortMatrix()));
-		drawPos[0] = Transform(Vector3(0, 0, 0), Multiply(worldViewProjectiveMatrix, draw->GetViewPortMatrix()));
-
+		affine[0] = MakeAffineMatrix(translate[0], scales[0], rorares[0]);
+		drawPos[0] = draw->Renderingpipeline(camera, affine[0]);
+		affine[1]= MakeAffineMatrix(translate[1], scales[1], rorares[1]);
+		affine[1] = Multiply(affine[1], affine[0]);
+		drawPos[1] = draw->Renderingpipeline(camera, affine[1]);
+		affine[2] = MakeAffineMatrix(translate[2], scales[2], rorares[2]);
+		affine[2] = Multiply(affine[2], affine[1]);
+		drawPos[2] = draw->Renderingpipeline(camera, affine[2]);
 
 		///
 		/// ↑更新処理ここまで
@@ -107,12 +115,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
+		draw->DrawGrid(camera);
+
 		Novice::DrawLine(static_cast<int>(drawPos[0].x), static_cast<int>(drawPos[0].y), static_cast<int>(drawPos[1].x), static_cast<int>(drawPos[1].y), BLACK);
 		Novice::DrawLine(static_cast<int>(drawPos[1].x), static_cast<int>(drawPos[1].y), static_cast<int>(drawPos[2].x), static_cast<int>(drawPos[2].y), BLACK);
 
-		for (int i = 0; i < 3; i++) {
-			Novice::DrawEllipse(static_cast<int>(drawPos[i].x), static_cast<int>(drawPos[i].y), 3, 3, 0.0f, 255 + 255 * i, kFillModeSolid);
-		}
+
+		Novice::DrawEllipse(static_cast<int>(drawPos[0].x), static_cast<int>(drawPos[0].y), 5, 5, 0.0f, RED, kFillModeSolid);
+		Novice::DrawEllipse(static_cast<int>(drawPos[1].x), static_cast<int>(drawPos[1].y), 5, 5, 0.0f, GREEN, kFillModeSolid);
+		Novice::DrawEllipse(static_cast<int>(drawPos[2].x), static_cast<int>(drawPos[2].y), 5, 5, 0.0f, BLUE, kFillModeSolid);
+
 
 		///
 		/// ↑描画処理ここまで

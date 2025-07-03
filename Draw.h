@@ -44,6 +44,7 @@ public:
 
 	Matrix4x4 Renderingpipeline(Camera camera, Object object);
 
+	Vector3 Renderingpipeline(Camera camera, Matrix4x4 worldMatrix);
 
 	//ゲッター
 
