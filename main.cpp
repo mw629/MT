@@ -35,11 +35,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	camera.scale = { 1.0f,1.0f,1.0f };
 	camera.rotate = { 0.26f,0.0f,0.0f };
 
+	Vector3 center = { 0.0f,0.0f,0.0f };
+	Sphere point;
+	point.radius = 0.04f;
 
-	//Vector3 drawPos;
-	//Matrix4x4 affine;
+	float radius = 0.8f;
 
-	bool isMove;
+	float angularVelocity = 3.14f;
+	float angle = 0.0f;
+
+	Vector3 drawPos;
+	Matrix4x4 affine;
+
+	float deltaTime = 1.0f/60.0f;
+
+	bool isMove=false;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -55,12 +65,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		ImGui::Begin("window");
-		
+		ImGui::Checkbox("move", &isMove);
 		ImGui::End();
+		if (isMove) {
+			angle += angularVelocity * deltaTime;
+		}
+		point.center.x = center.x + std::cos(angle) *radius;
+		point.center.y = center.y + std::sin(angle) * radius;
+		point.center.z = center.z;
 
-	
-		//affine = MakeAffineMatrix(spring.anchor, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
-		//drawPos = draw->Renderingpipeline(camera, affine);
+		
+
 		
 		///
 		/// ↑更新処理ここまで
@@ -71,9 +86,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		draw->DrawGrid(camera);
-
-		draw->DrawSphere(ball.shape, camera, ball.color);
-
+		draw->DrawSphere(point, camera, WHITE);
 
 		///
 		/// ↑描画処理ここまで
