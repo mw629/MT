@@ -47,7 +47,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 drawPos;
 	Matrix4x4 affine;
 
-	float deltaTime = 1.0f/60.0f;
 
 	bool isMove=false;
 
@@ -68,12 +67,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Checkbox("move", &isMove);
 		ImGui::End();
 		if (isMove) {
-			angle += angularVelocity * deltaTime;
+			
 		}
-		point.center.x = center.x + std::cos(angle) *radius;
-		point.center.y = center.y + std::sin(angle) * radius;
-		point.center.z = center.z;
-
+	
 		
 
 		
