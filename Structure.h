@@ -86,10 +86,9 @@ struct Spring {
 	float stiffness;//剛性。ばね定数
 };
 struct Ball {
-	Vector3 postion;//ボールの位置
+	Sphere shape;
 	Vector3 velosity;//ボールの速度
 	Vector3 acceleration;//ボールの加速
 	float mass;//ボールの質量
-	float radius;//ボールの半径
 	unsigned int color;//ボールの色
 };

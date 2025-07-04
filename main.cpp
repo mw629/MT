@@ -41,12 +41,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	spring.stiffness = 100.0f;
 
 	Ball ball{};
-	ball.postion = { 1.2f,0.0f,0.0f };
+	ball.shape.center = { 1.2f,0.0f,0.0f };
 	ball.mass = 2.0f;
-	ball.radius = 0.05f;
+	ball.shape.radius = 0.05f;
 	ball.color = BLUE;
 
-	float deltaTime = 1.0f / 60.0f;
+	Vector3 drawPos[2];
+	Matrix4x4 affine[2];
+
+	bool isMove;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -62,22 +65,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		ImGui::Begin("window");
-
+		ImGui::Checkbox("Move", &isMove);
+		ImGui::SliderFloat("mass", &ball.mass,0.0f,10.0f);
+		ImGui::SliderFloat3("center", &ball.shape.center.x, 0.0f, 1.0f);
 		ImGui::End();
 
-		Vector3 diff = ball.postion - spring.anchor;
-		float length = Lengeh(diff);
-		if (length != 0.0f) {
-			Vector3 direction = Normalize(diff);
-			Vector3 restPostion = spring.anchor + direction * spring.naturalLength;
-			Vector3 displacement = Multiply(ball.postion - restPostion, length);
-			Vector3 restoringForce = Multiply(displacement ,-spring.stiffness);
-			Vector3 force = restoringForce;
-			ball.acceleration = force / ball.mass;
+		if (isMove) {
+			SpringMove(spring, ball);
 		}
-		ball.velosity += ball.acceleration * deltaTime;
-		ball.postion += ball.velosity * deltaTime;
 
+		affine[0] = MakeAffineMatrix(spring.anchor, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
+		drawPos[0] = draw->Renderingpipeline(camera, affine[0]);
+		affine[1] = MakeAffineMatrix(ball.shape.center,{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f});
+		drawPos[1] = draw->Renderingpipeline(camera, affine[1]);
 
 		///
 		/// ↑更新処理ここまで
@@ -89,7 +89,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		draw->DrawGrid(camera);
 
-		
+		Novice::DrawLine(int(drawPos[0].x), int(drawPos[0].y), int(drawPos[1].x), int(drawPos[1].y), WHITE);
+		draw->DrawSphere(ball.shape, camera, ball.color);
 
 
 		///
