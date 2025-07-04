@@ -225,3 +225,13 @@ Matrix4x4 Draw::Renderingpipeline(Camera camera, Object object)
 	Matrix4x4 worldViewProjectiveMatrix = Multiply(worldMatrix, MakeprojectionMatrix(camera));
 	return worldViewProjectiveMatrix;
 }
+
+Vector3 Draw::Renderingpipeline(Camera camera, Matrix4x4 worldMatrix)
+{
+	Vector3 pos;
+	Matrix4x4 worldViewProjectiveMatrix = Multiply(worldMatrix, MakeprojectionMatrix(camera));
+	pos = Transform({ 0,0,0 }, worldViewProjectiveMatrix);
+	pos = Transform(pos, viewportMatrix);
+	return pos;
+}
+
