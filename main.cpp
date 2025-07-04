@@ -30,6 +30,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Draw* draw = new Draw();
 
+	Camera camera;
+	camera.pos = { 0.0f,1.9f,-6.49f };
+	camera.scale = { 1.0f,1.0f,1.0f };
+	camera.rotate = { 0.26f,0.0f,0.0f };
+
+	Spring spring{};
+	spring.anchor = { 0.0f,0.0f,0.0f };
+	spring.naturalLength = 1.0f;
+	spring.stiffness = 100.0f;
+
+	Ball ball{};
+	ball.postion = { 1.2f,0.0f,0.0f };
+	ball.mass = 2.0f;
+	ball.radius = 0.05f;
+	ball.color = BLUE;
+
+	float deltaTime = 1.0f / 60.0f;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -48,6 +65,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		
 		ImGui::End();
 
+		Vector3 diff = ball.postion - spring.anchor;
+		float length = Lengeh(diff);
+		if (length != 0.0f) {
+			Vector3 direction = Normalize(diff);
+			Vector3 restPostion = spring.anchor + direction * spring.naturalLength;
+			Vector3 sum = ball.postion - restPostion;
+			Vector3 displacement =length * sum;
+		}
 
 
 		///
@@ -58,6 +83,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
+		draw->DrawGrid(camera);
 
 		///
 		/// ↑描画処理ここまで

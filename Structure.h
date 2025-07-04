@@ -78,3 +78,17 @@ struct BezierCurve {
 	Vector3 controlPoint;
 	Vector3 end;
 };
+
+struct Spring {
+	Vector3 anchor;
+	float naturalLength;//自然長
+	float stiffness;//剛性。ばね定数
+};
+struct Ball {
+	Vector3 postion;//ボールの位置
+	Vector3 velosity;//ボールの速度
+	Vector3 acceleration;//ボールの加速
+	float mass;//ボールの質量
+	float radius;//ボールの半径
+	unsigned int color;//ボールの色
+};
