@@ -270,3 +270,5 @@ Vector3 Perpendicular(const Vector3& vector);
 ///動き///
 
 void SpringMove(Spring &spring,Ball &ball);
+
+void PendulumMove(Pundulm &pundulm, Sphere& sphere,bool isMove);

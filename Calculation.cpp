@@ -471,3 +471,18 @@ void SpringMove(Spring &spring,Ball &ball)
 	ball.shape.center += ball.velosity * deltaTime;
 }
 
+void PendulumMove(Pundulm& pundulm, Sphere& sphere, bool isMove)
+{
+	float deltaTime = 1.0f / 60.0f;
+	if (isMove) {
+		pundulm.angularAcceleration = -(9.8f / pundulm.lengrh) * std::sin(pundulm.angle);
+		pundulm.angularVelocity += pundulm.angularAcceleration * deltaTime;
+		pundulm.angle += pundulm.angularVelocity * deltaTime;
+	}
+	sphere.center.x = pundulm.anchor.x + std::sin(pundulm.angle) * pundulm.lengrh;
+	sphere.center.y = pundulm.anchor.y - std::cos(pundulm.angle) * pundulm.lengrh;
+	sphere.center.z = pundulm.anchor.z;
+}
+
+
+
