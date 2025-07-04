@@ -62,7 +62,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		ImGui::Begin("window");
-		
+
 		ImGui::End();
 
 		Vector3 diff = ball.postion - spring.anchor;
@@ -70,9 +70,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		if (length != 0.0f) {
 			Vector3 direction = Normalize(diff);
 			Vector3 restPostion = spring.anchor + direction * spring.naturalLength;
-			Vector3 sum = ball.postion - restPostion;
-			Vector3 displacement =length * sum;
+			Vector3 displacement = Multiply(ball.postion - restPostion, length);
+			Vector3 restoringForce = Multiply(displacement ,-spring.stiffness);
+			Vector3 force = restoringForce;
+			ball.acceleration = force / ball.mass;
 		}
+		ball.velosity += ball.acceleration * deltaTime;
+		ball.postion += ball.velosity * deltaTime;
 
 
 		///
@@ -84,6 +88,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		draw->DrawGrid(camera);
+
+		
+
 
 		///
 		/// ↑描画処理ここまで
