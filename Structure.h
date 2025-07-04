@@ -24,6 +24,7 @@ struct Matrix4x4 {
 		{0,0,0,0},
 		{0,0,0,0},
 	};
+	Matrix4x4 operator*(Matrix4x4 other);
 
 };
 
