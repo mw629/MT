@@ -30,17 +30,26 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Draw* draw = new Draw();
 
-	Vector3 a{ 0.2f,1.0f,0.0f };
-	Vector3 b{ 2.4f,3.1f,1.2f };
-	Vector3 c = a + b;
-	Vector3 d = a - b;
-	Vector3 e = a * 2.4f;
-	Vector3 rotate{ 0.4f,1.43f,-0.8f };
-	Matrix4x4 rotateXMatrix = RotationX(rotate.x);
-	Matrix4x4 rotateYMatrix = RotationY(rotate.y);
-	Matrix4x4 rotateZMatrix = RotationZ(rotate.z);
-	Matrix4x4 rotateMatrix = rotateXMatrix * rotateYMatrix * rotateZMatrix;
+	Camera camera;
+	camera.pos = { 0.0f,1.9f,-6.49f };
+	camera.scale = { 1.0f,1.0f,1.0f };
+	camera.rotate = { 0.26f,0.0f,0.0f };
 
+	Spring spring{};
+	spring.anchor = { 0.0f,0.0f,0.0f };
+	spring.naturalLength = 1.0f;
+	spring.stiffness = 100.0f;
+
+	Ball ball{};
+	ball.shape.center = { 1.2f,0.0f,0.0f };
+	ball.mass = 2.0f;
+	ball.shape.radius = 0.05f;
+	ball.color = BLUE;
+
+	Vector3 drawPos[2];
+	Matrix4x4 affine[2];
+
+	bool isMove;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -56,19 +65,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		ImGui::Begin("window");
-		ImGui::Text("c:%f,%f,%f", c.x, c.y, c.z);
-		ImGui::Text("d:%f,%f,%f", d.x, d.y, d.z);
-		ImGui::Text("e:%f,%f,%f", e.x, e.y, e.z);
-		ImGui::Text(
-			"matrix\n%f,%f,%f,%f\n%f,%f,%f,%f\n%f,%f,%f,%f\n%f,%f,%f,%f\n",
-			rotateMatrix.m[0][0], rotateMatrix.m[0][1], rotateMatrix.m[0][2], rotateMatrix.m[0][3],
-			rotateMatrix.m[1][0], rotateMatrix.m[1][1], rotateMatrix.m[1][2], rotateMatrix.m[1][3],
-			rotateMatrix.m[2][0], rotateMatrix.m[2][1], rotateMatrix.m[2][2], rotateMatrix.m[2][3],
-			rotateMatrix.m[3][0], rotateMatrix.m[3][1], rotateMatrix.m[3][2], rotateMatrix.m[3][3]
-		);
+		ImGui::Checkbox("Move", &isMove);
+		ImGui::SliderFloat("mass", &ball.mass,0.0f,10.0f);
+		ImGui::SliderFloat3("center", &ball.shape.center.x, 0.0f, 1.0f);
 		ImGui::End();
 
+		if (isMove) {
+			SpringMove(spring, ball);
+		}
 
+		affine[0] = MakeAffineMatrix(spring.anchor, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
+		drawPos[0] = draw->Renderingpipeline(camera, affine[0]);
+		affine[1] = MakeAffineMatrix(ball.shape.center,{1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f});
+		drawPos[1] = draw->Renderingpipeline(camera, affine[1]);
 
 		///
 		/// ↑更新処理ここまで
@@ -77,6 +86,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓描画処理ここから
 		///
+
+		draw->DrawGrid(camera);
+
+		Novice::DrawLine(int(drawPos[0].x), int(drawPos[0].y), int(drawPos[1].x), int(drawPos[1].y), WHITE);
+		draw->DrawSphere(ball.shape, camera, ball.color);
 
 
 		///

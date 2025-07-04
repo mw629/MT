@@ -265,3 +265,8 @@ Matrix4x4 MakeViewPortMatrix(float width, float height, float left, float top, f
 /// <param name="vector">平面の法線</param>
 /// <returns></returns>
 Vector3 Perpendicular(const Vector3& vector);
+
+
+///動き///
+
+void SpringMove(Spring &spring,Ball &ball);

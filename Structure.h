@@ -10,6 +10,7 @@ struct Vector3 {
 	Vector3 operator-(const Vector3& other)  const { return { x - other.x, y - other.y,z - other.z }; }
 	Vector3 operator*(float other) const { return { x * other, y * other,z * other }; }
 	Vector3 operator/(const Vector3& other) { return { x / other.x, y / other.y ,z / other.z }; }
+	Vector3 operator/(float other) { return { x / other, y / other ,z / other }; }
 	Vector3 operator=(const Vector3& other) { return { x = other.x, y = other.y,z = other.z }; }
 	Vector3 operator+=(const Vector3& other) { return { x += other.x, y += other.y,z += other.z }; }
 	Vector3 operator-=(const Vector3& other) { return { x -= other.x, y -= other.y,z -= other.z }; }
@@ -77,4 +78,17 @@ struct BezierCurve {
 	Vector3 start;
 	Vector3 controlPoint;
 	Vector3 end;
+};
+
+struct Spring {
+	Vector3 anchor;
+	float naturalLength;//自然長
+	float stiffness;//剛性。ばね定数
+};
+struct Ball {
+	Sphere shape;
+	Vector3 velosity;//ボールの速度
+	Vector3 acceleration;//ボールの加速
+	float mass;//ボールの質量
+	unsigned int color;//ボールの色
 };

@@ -453,3 +453,21 @@ Vector3 Perpendicular(const Vector3& vector)
 	return{0.0f, -vector.z, vector.y};
 }
 
+void SpringMove(Spring &spring,Ball &ball)
+{
+	float deltaTime = 1.0f / 60.0f;
+
+	Vector3 diff = ball.shape.center - spring.anchor;
+	float length = Lengeh(diff);
+	if (length != 0.0f) {
+		Vector3 direction = Normalize(diff);
+		Vector3 restPostion = spring.anchor + direction * spring.naturalLength;
+		Vector3 displacement = Multiply(ball.shape.center - restPostion, length);
+		Vector3 restoringForce = Multiply(displacement, -spring.stiffness);
+		Vector3 force = restoringForce;
+		ball.acceleration = force / ball.mass;
+	}
+	ball.velosity += ball.acceleration * deltaTime;
+	ball.shape.center += ball.velosity * deltaTime;
+}
+
