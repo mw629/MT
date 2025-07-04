@@ -85,10 +85,20 @@ struct Spring {
 	float naturalLength;//自然長
 	float stiffness;//剛性。ばね定数
 };
+
 struct Ball {
 	Sphere shape;
 	Vector3 velosity;//ボールの速度
 	Vector3 acceleration;//ボールの加速
 	float mass;//ボールの質量
 	unsigned int color;//ボールの色
+};
+
+struct Pundulm
+{
+	Vector3 anchor;//アンカーポイント
+	float lengrh;//紐の長さ	
+	float angle;//現在の角度
+	float angularVelocity;//角速度ω
+	float angularAcceleration;//角加速度
 };

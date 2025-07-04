@@ -35,21 +35,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	camera.scale = { 1.0f,1.0f,1.0f };
 	camera.rotate = { 0.26f,0.0f,0.0f };
 
-	Vector3 center = { 0.0f,0.0f,0.0f };
-	Sphere point;
-	point.radius = 0.04f;
+	Vector3 drawPos[2];
+	Matrix4x4 affine[2];
 
-	float radius = 0.8f;
+	Pundulm pundulm;
+	pundulm.anchor = { 0.0f,1.0f,0.0f };
+	pundulm.lengrh = 0.8f;
+	pundulm.angle = 0.7f;
+	pundulm.angularVelocity = 0.0f;
+	pundulm.angularAcceleration = 0.0f;
 
-	float angularVelocity = 3.14f;
-	float angle = 0.0f;
+	Sphere sphere;
+	sphere.radius = 0.1f;
 
-	Vector3 drawPos;
-	Matrix4x4 affine;
-
-	float deltaTime = 1.0f/60.0f;
-
-	bool isMove=false;
+	bool isMove = false;
+	
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -66,17 +66,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		ImGui::Begin("window");
 		ImGui::Checkbox("move", &isMove);
+		
 		ImGui::End();
-		if (isMove) {
-			angle += angularVelocity * deltaTime;
-		}
-		point.center.x = center.x + std::cos(angle) *radius;
-		point.center.y = center.y + std::sin(angle) * radius;
-		point.center.z = center.z;
+
+		PendulumMove(pundulm, sphere, isMove);
 
 		
-
 		
+
+		affine[0] = MakeAffineMatrix(pundulm.anchor, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
+		drawPos[0] = draw->Renderingpipeline(camera, affine[0]);
+		affine[1] = MakeAffineMatrix(sphere.center, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
+		drawPos[1] = draw->Renderingpipeline(camera, affine[1]);
+
+
 		///
 		/// ↑更新処理ここまで
 		///
@@ -86,7 +89,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		draw->DrawGrid(camera);
-		draw->DrawSphere(point, camera, WHITE);
+
+		Novice::DrawLine(int(drawPos[0].x), int(drawPos[0].y), int(drawPos[1].x), int(drawPos[1].y), WHITE);
+		draw->DrawSphere(sphere, camera, WHITE);
 
 		///
 		/// ↑描画処理ここまで
