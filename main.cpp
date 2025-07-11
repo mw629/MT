@@ -35,22 +35,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	camera.scale = { 1.0f,1.0f,1.0f };
 	camera.rotate = { 0.26f,0.0f,0.0f };
 
-	Vector3 drawPos[2];
-	Matrix4x4 affine[2];
+	Plane plane;
+	plane.normal = Normalize({ -0.2f, 0.9f,-0.3f });
+	plane.distance = 0.0f;
 
-	ConicalPendulum conicalPendulum;
-	conicalPendulum.anchor = { 0.0f,1.0f,0.0f };
-	conicalPendulum.lengrh = 0.8f;
-	conicalPendulum.halfApexAngle = 0.7f;
-	conicalPendulum.angle = 0.0f;
-	conicalPendulum.angularVelocity = 0.0f;
-
-
-	Sphere sphere;
-	sphere.radius = 0.1f;
+	Ball ball{};
+	ball.shape.center = { 0.0f,1.2f,0.3f };
+	ball.mass = 2.0f;
+	ball.shape.radius = 0.05f;
+	ball.color = WHITE;
+	ball.acceleration = { 0.0f,-9.8f,0.0f };
 
 	bool isMove = false;
-	
+
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -67,17 +64,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		ImGui::Begin("window");
 		ImGui::Checkbox("move", &isMove);
-		
+		ImGui::DragFloat3("pos", &camera.pos.x, 0.1f, 1.0f);
+		ImGui::DragFloat3("angle", &camera.rotate.x, 0.1f, 1.0f);
 		ImGui::End();
 
-		ConicalPendulumMove(conicalPendulum, sphere, isMove);
-		
-		
+		if (keys[DIK_SPACE]) {
+			isMove = true;
+		}
 
-		affine[0] = MakeAffineMatrix(conicalPendulum.anchor, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
-		drawPos[0] = draw->Renderingpipeline(camera, affine[0]);
-		affine[1] = MakeAffineMatrix(sphere.center, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
-		drawPos[1] = draw->Renderingpipeline(camera, affine[1]);
+		if (isMove) {
+		BallMove(ball, plane, 0.9f);
+		}
+			
 
 
 		///
@@ -90,8 +88,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		draw->DrawGrid(camera);
 
-		Novice::DrawLine(int(drawPos[0].x), int(drawPos[0].y), int(drawPos[1].x), int(drawPos[1].y), WHITE);
-		draw->DrawSphere(sphere, camera, WHITE);
+		draw->DrawPlane(plane,camera,WHITE);
+		draw->DrawSphere(ball.shape, camera, ball.color);
+
 
 		///
 		/// ↑描画処理ここまで

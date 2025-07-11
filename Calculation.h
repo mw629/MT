@@ -266,6 +266,8 @@ Matrix4x4 MakeViewPortMatrix(float width, float height, float left, float top, f
 /// <returns></returns>
 Vector3 Perpendicular(const Vector3& vector);
 
+Vector3 Reflect(const Vector3& input, const Vector3& normal);
+
 
 ///動き///
 
@@ -274,3 +276,7 @@ void SpringMove(Spring &spring,Ball &ball);
 void PendulumMove(Pundulm &pundulm, Sphere& sphere,bool isMove);
 
 void ConicalPendulumMove(ConicalPendulum& conicalPendulum, Sphere& sphere, bool isMove);
+
+void BallMove(Ball& ball, Plane& plane,float e);
+
+
