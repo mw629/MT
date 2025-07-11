@@ -102,3 +102,11 @@ struct Pundulm
 	float angularVelocity;//角速度ω
 	float angularAcceleration;//角加速度
 };
+
+struct ConicalPendulum {
+	Vector3 anchor;//アンカーポイント
+	float lengrh;//紐の長さ	
+	float halfApexAngle;//円柱の頂角の半分
+	float angle;//現在の角度
+	float angularVelocity;//角速度ω
+};

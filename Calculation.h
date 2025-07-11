@@ -272,3 +272,5 @@ Vector3 Perpendicular(const Vector3& vector);
 void SpringMove(Spring &spring,Ball &ball);
 
 void PendulumMove(Pundulm &pundulm, Sphere& sphere,bool isMove);
+
+void ConicalPendulumMove(ConicalPendulum& conicalPendulum, Sphere& sphere, bool isMove);
