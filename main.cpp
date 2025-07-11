@@ -38,12 +38,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 drawPos[2];
 	Matrix4x4 affine[2];
 
-	Pundulm pundulm;
-	pundulm.anchor = { 0.0f,1.0f,0.0f };
-	pundulm.lengrh = 0.8f;
-	pundulm.angle = 0.7f;
-	pundulm.angularVelocity = 0.0f;
-	pundulm.angularAcceleration = 0.0f;
+	ConicalPendulum conicalPendulum;
+	conicalPendulum.anchor = { 0.0f,1.0f,0.0f };
+	conicalPendulum.lengrh = 0.8f;
+	conicalPendulum.halfApexAngle = 0.7f;
+	conicalPendulum.angle = 0.0f;
+	conicalPendulum.angularVelocity = 0.0f;
+
 
 	Sphere sphere;
 	sphere.radius = 0.1f;
@@ -69,12 +70,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		
 		ImGui::End();
 
-		PendulumMove(pundulm, sphere, isMove);
-
+		ConicalPendulumMove(conicalPendulum, sphere, isMove);
 		
 		
 
-		affine[0] = MakeAffineMatrix(pundulm.anchor, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
+		affine[0] = MakeAffineMatrix(conicalPendulum.anchor, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
 		drawPos[0] = draw->Renderingpipeline(camera, affine[0]);
 		affine[1] = MakeAffineMatrix(sphere.center, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f });
 		drawPos[1] = draw->Renderingpipeline(camera, affine[1]);

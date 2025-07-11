@@ -111,7 +111,7 @@ Vector3 Cross(const Vector3& v1, const Vector3& v2) {
 Vector3 ProjectionVector(const Vector3& v1, const Vector3& v2)
 {
 	Vector3 result;
-	result = v2* (Dot(v1,v2) / (Lengeh(v2) * Lengeh(v2)));
+	result = v2 * (Dot(v1, v2) / (Lengeh(v2) * Lengeh(v2)));
 	return result;
 }
 
@@ -161,9 +161,9 @@ Matrix4x4 Multiply(Matrix4x4 m1, Matrix4x4 m2)//o
 		{
 			result.m[i][j]
 				= m1.m[i][0] * m2.m[0][j]
-					+ m1.m[i][1] * m2.m[1][j]
-						+ m1.m[i][2] * m2.m[2][j]
-							+ m1.m[i][3] * m2.m[3][j];
+				+ m1.m[i][1] * m2.m[1][j]
+				+ m1.m[i][2] * m2.m[2][j]
+				+ m1.m[i][3] * m2.m[3][j];
 		}
 	}
 	return result;
@@ -450,10 +450,10 @@ Vector3 Perpendicular(const Vector3& vector)
 	if (vector.x != 0.0f || vector.y != 0.0f) {
 		return{ -vector.y, vector.x, 0.0f };
 	}
-	return{0.0f, -vector.z, vector.y};
+	return{ 0.0f, -vector.z, vector.y };
 }
 
-void SpringMove(Spring &spring,Ball &ball)
+void SpringMove(Spring& spring, Ball& ball)
 {
 	float deltaTime = 1.0f / 60.0f;
 
@@ -482,6 +482,21 @@ void PendulumMove(Pundulm& pundulm, Sphere& sphere, bool isMove)
 	sphere.center.x = pundulm.anchor.x + std::sin(pundulm.angle) * pundulm.lengrh;
 	sphere.center.y = pundulm.anchor.y - std::cos(pundulm.angle) * pundulm.lengrh;
 	sphere.center.z = pundulm.anchor.z;
+}
+
+void ConicalPendulumMove(ConicalPendulum& conicalPendulum, Sphere& sphere, bool isMove)
+{
+	float deltaTime = 1.0f / 60.0f;
+	if (isMove) {
+		conicalPendulum.angularVelocity = std::sqrtf(9.8f / (conicalPendulum.lengrh * std::cos(conicalPendulum.halfApexAngle)));
+		conicalPendulum.angle += conicalPendulum.angularVelocity * deltaTime;
+	}
+
+	float radius = std::sin(conicalPendulum.halfApexAngle) * conicalPendulum.lengrh;
+	float height = std::cos(conicalPendulum.halfApexAngle) * conicalPendulum.lengrh;
+	sphere.center.x = conicalPendulum.anchor.x + std::cos(conicalPendulum.angle) * radius;
+	sphere.center.y = conicalPendulum.anchor.y - height;
+	sphere.center.z = conicalPendulum.anchor.z - std::sin(conicalPendulum.angle) * radius;
 }
 
 
