@@ -3,6 +3,7 @@
 #include <Novice.h>
 #include <cmath>
 #include "assert.h"
+#include "Collision.h"
 
 
 
@@ -453,6 +454,14 @@ Vector3 Perpendicular(const Vector3& vector)
 	return{ 0.0f, -vector.z, vector.y };
 }
 
+
+Vector3 Reflect(const Vector3& input, const Vector3& normal)
+{
+	Vector3 result;
+	result = input - Multiply(normal, (2.0f * Dot(input, normal)));
+	return result;
+}
+
 void SpringMove(Spring& spring, Ball& ball)
 {
 	float deltaTime = 1.0f / 60.0f;
@@ -497,6 +506,21 @@ void ConicalPendulumMove(ConicalPendulum& conicalPendulum, Sphere& sphere, bool 
 	sphere.center.x = conicalPendulum.anchor.x + std::cos(conicalPendulum.angle) * radius;
 	sphere.center.y = conicalPendulum.anchor.y - height;
 	sphere.center.z = conicalPendulum.anchor.z - std::sin(conicalPendulum.angle) * radius;
+}
+
+void BallMove(Ball& ball, Plane& plane, float e)
+{
+	float deltaTime = 1.0f / 60.0f;
+	ball.velosity += ball.acceleration * deltaTime;
+	ball.shape.center += ball.velosity * deltaTime;
+
+	if (IsCollision(ball.shape, plane)) {
+		Vector3 reflected = Reflect(ball.velosity, plane.normal);
+		Vector3 projectToNormal = ProjectionVector(reflected, plane.normal);
+		Vector3 movingDirection = reflected - projectToNormal;
+
+		ball.velosity = projectToNormal * e + movingDirection;
+	}
 }
 
 
