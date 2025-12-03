@@ -205,6 +205,10 @@ Matrix4x4 RotationZ(float angle);
 /// <returns>回転行列</returns>
 Matrix4x4 Rotation(Vector3 angle);//不安
 
+
+Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
+
+
 /// <summary>
 /// この関数は、ベクトルを行列で変換します。
 /// </summary>
