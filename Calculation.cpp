@@ -357,6 +357,13 @@ Matrix4x4 Rotation(Vector3 angle)
 	return result;
 }
 
+Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle)
+{
+	return Matrix4x4();
+}
+
+
+
 Matrix4x4 Translation(Vector3 pos)
 {
 	Matrix4x4 result;
