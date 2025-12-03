@@ -27,26 +27,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char keys[256] = { 0 };
 	char preKeys[256] = { 0 };
 
-
-	Draw* draw = new Draw();
-
-	Camera camera;
-	camera.pos = { 0.0f,1.9f,-6.49f };
-	camera.scale = { 1.0f,1.0f,1.0f };
-	camera.rotate = { 0.26f,0.0f,0.0f };
-
-	Plane plane;
-	plane.normal = Normalize({ -0.2f, 0.9f,-0.3f });
-	plane.distance = 0.0f;
-
-	Ball ball{};
-	ball.shape.center = { 0.0f,1.2f,0.3f };
-	ball.mass = 2.0f;
-	ball.shape.radius = 0.05f;
-	ball.color = WHITE;
-	ball.acceleration = { 0.0f,-9.8f,0.0f };
-
-	bool isMove = false;
+	Vector3 axis= Normalize({ 1.0f,1.0f,1.0f });
+	float angle = 0.44f;
+	Matrix4x4 rotateMatrix = MakeRotateAxisAngle(axis, angle);
 
 
 	// ウィンドウの×ボタンが押されるまでループ
@@ -62,20 +45,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
-		ImGui::Begin("window");
-		ImGui::Checkbox("move", &isMove);
-		ImGui::DragFloat3("pos", &camera.pos.x, 0.1f, 1.0f);
-		ImGui::DragFloat3("angle", &camera.rotate.x, 0.1f, 1.0f);
-		ImGui::End();
-
-		if (keys[DIK_SPACE]) {
-			isMove = true;
-		}
-
-		if (isMove) {
-		BallMove(ball, plane, 0.9f);
-		}
-			
 
 
 		///
@@ -86,11 +55,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		draw->DrawGrid(camera);
-
-		draw->DrawPlane(plane,camera,WHITE);
-		draw->DrawSphere(ball.shape, camera, ball.color);
-
+		MatrixScreenPrintf(0, 0, rotateMatrix, "totateMatrix");
 
 		///
 		/// ↑描画処理ここまで
@@ -105,7 +70,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 	}
 
-	delete draw;
 
 
 	// ライブラリの終了
