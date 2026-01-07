@@ -208,6 +208,8 @@ Matrix4x4 Rotation(Vector3 angle);//不安
 
 Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
 
+Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
+
 
 /// <summary>
 /// この関数は、ベクトルを行列で変換します。

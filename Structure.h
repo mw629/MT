@@ -6,6 +6,7 @@ struct Vector3 {
 	float z = 0.0f;
 	float w = 1.0f;
 
+	Vector3 operator-() const { return { -x, -y, -z }; }
 	Vector3 operator+(const Vector3& other) const { return { x + other.x, y + other.y,z + other.z }; }
 	Vector3 operator-(const Vector3& other)  const { return { x - other.x, y - other.y,z - other.z }; }
 	Vector3 operator*(float other) const { return { x * other, y * other,z * other }; }

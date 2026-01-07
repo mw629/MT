@@ -76,7 +76,7 @@ Vector3 Multiply(Vector3 v, float s)
 	return result;
 }
 
-float Lengeh(Vector3 v)
+float Length(Vector3 v)
 {
 	float result;
 	result = static_cast<float>(sqrt(v.x * v.x + v.y * v.y + v.z * v.z));
@@ -86,10 +86,10 @@ float Lengeh(Vector3 v)
 Vector3 Normalize(Vector3 v)
 {
 	Vector3 result{};
-	if (Lengeh(v) != 0) {
-		result.x = v.x / Lengeh(v);
-		result.y = v.y / Lengeh(v);
-		result.z = v.z / Lengeh(v);
+	if (Length(v) != 0) {
+		result.x = v.x / Length(v);
+		result.y = v.y / Length(v);
+		result.z = v.z / Length(v);
 	}
 	return result;
 }
@@ -112,7 +112,7 @@ Vector3 Cross(const Vector3& v1, const Vector3& v2) {
 Vector3 ProjectionVector(const Vector3& v1, const Vector3& v2)
 {
 	Vector3 result;
-	result = v2 * (Dot(v1, v2) / (Lengeh(v2) * Lengeh(v2)));
+	result = v2 * (Dot(v1, v2) / (Length(v2) * Length(v2)));
 	return result;
 }
 
@@ -376,6 +376,25 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle)
 
 }
 
+Matrix4x4 DirectionToDirection(Vector3& from, Vector3& to) {
+	Matrix4x4 matrix;
+	Vector3 n = Normalize(Cross(from, to));
+	float cos = Dot(from, to);
+	float sin = Length(Cross(from, to));;
+	matrix.m[0][0] = n.x * n.x * (1 - cos) + cos;
+	matrix.m[0][1] = n.x * n.y * (1 - cos) + n.z * sin;
+	matrix.m[0][2] = n.x * n.z * (1 - cos) - n.y * sin;
+
+	matrix.m[1][0] = n.x * n.y * (1 - cos) + n.z * sin;
+	matrix.m[1][1] = n.y * n.y * (1 - cos) + cos;
+	matrix.m[1][2] = n.y * n.z * (1 - cos) + n.x * sin;
+
+	matrix.m[2][0] = n.x * n.z * (1 - cos) + n.y * sin;
+	matrix.m[2][1] = n.y * n.z * (1 - cos) + n.x * sin;
+	matrix.m[2][2] = n.z * n.z * (1 - cos) + cos;
+
+	return matrix;
+}
 
 
 Matrix4x4 Translation(Vector3 pos)
@@ -488,7 +507,7 @@ void SpringMove(Spring& spring, Ball& ball)
 	float deltaTime = 1.0f / 60.0f;
 
 	Vector3 diff = ball.shape.center - spring.anchor;
-	float length = Lengeh(diff);
+	float length = Length(diff);
 	if (length != 0.0f) {
 		Vector3 direction = Normalize(diff);
 		Vector3 restPostion = spring.anchor + direction * spring.naturalLength;
