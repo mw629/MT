@@ -364,7 +364,7 @@ Matrix4x4 Rotation(Vector3 angle)
 
 Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle)
 {
-	Matrix4x4 matrix;
+	Matrix4x4 matrix=IdentityMatrix();
 	matrix.m[0][0] = axis.x * axis.x * (1 - cos(angle)) + cos(angle);
 	matrix.m[0][1] = axis.x * axis.y * (1 - cos(angle)) + axis.z * sin(angle);
 	matrix.m[0][2] = axis.x * axis.z * (1 - cos(angle)) - axis.y * sin(angle);
