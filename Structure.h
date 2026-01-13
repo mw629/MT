@@ -30,6 +30,14 @@ struct Matrix4x4 {
 
 };
 
+struct Quaternion {
+	float x;
+	float y;
+	float z;
+	float w;
+};
+
+
 struct Camera {
 	Vector3 pos;
 	Vector3 scale;

@@ -20,6 +20,16 @@ void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label) 
 	Novice::ScreenPrintf(x + kColimnWidth * 3, y, "%s", label);
 }
 
+void QuaternionScreenPrintf(int x, int y, const Quaternion& quaternion, const char* label)
+{
+	Novice::ScreenPrintf(x, y, "%.02f", quaternion.x);
+	Novice::ScreenPrintf(x + kColimnWidth, y, "%.02f", quaternion.y);
+	Novice::ScreenPrintf(x + kColimnWidth * 2, y, "%.02f", quaternion.z);
+	Novice::ScreenPrintf(x + kColimnWidth * 3, y, "%.02f", quaternion.w);
+	Novice::ScreenPrintf(x + kColimnWidth * 4, y, "%s", label);
+}
+
+
 void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label) {
 	Novice::ScreenPrintf(x, y, "%s", label);
 	for (int row = 1; row < 5; ++row) {
@@ -364,7 +374,7 @@ Matrix4x4 Rotation(Vector3 angle)
 
 Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle)
 {
-	Matrix4x4 matrix;
+	Matrix4x4 matrix=IdentityMatrix();
 	matrix.m[0][0] = axis.x * axis.x * (1 - cos(angle)) + cos(angle);
 	matrix.m[0][1] = axis.x * axis.y * (1 - cos(angle)) + axis.z * sin(angle);
 	matrix.m[0][2] = axis.x * axis.z * (1 - cos(angle)) - axis.y * sin(angle);
@@ -501,6 +511,92 @@ Matrix4x4 MakeViewPortMatrix(float width, float height, float left, float top, f
 	result.m[3][1] = top + height / 2.0f;
 	result.m[3][2] = minD;
 	result.m[3][3] = 1.0f;
+	return result;
+}
+
+Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs)
+{
+	Quaternion result;
+
+	result.w = lhs.w * rhs.w - lhs.x * rhs.x - lhs.y * rhs.y - lhs.z * rhs.z;
+	result.x = lhs.w * rhs.x + lhs.x * rhs.w + lhs.y * rhs.z - lhs.z * rhs.y;
+	result.y = lhs.w * rhs.y - lhs.x * rhs.z + lhs.y * rhs.w + lhs.z * rhs.x;
+	result.z = lhs.w * rhs.z + lhs.x * rhs.y - lhs.y * rhs.x + lhs.z * rhs.w;
+
+	return result;
+}
+
+Quaternion IdentityQuaternion()
+{
+	Quaternion result;
+
+	result.w = 1.0f;
+	result.x = 0.0f;
+	result.y = 0.0f;
+	result.z = 0.0f;
+
+	return result;
+}
+
+Quaternion Conjugats(const Quaternion& quaternion)
+{
+	Quaternion result;
+
+	result.w = quaternion.w;
+	result.x = -quaternion.x;
+	result.y = -quaternion.y;
+	result.z = -quaternion.z;
+
+	return result;
+}
+
+float Norm(const Quaternion& quaternion)
+{
+	return std::sqrt(
+		quaternion.w * quaternion.w +
+		quaternion.x * quaternion.x +
+		quaternion.y * quaternion.y +
+		quaternion.z * quaternion.z
+	);
+}
+
+Quaternion Normalize(const Quaternion& quaternion)
+{
+	Quaternion result;
+
+	float n = Norm(quaternion);
+	if (n < 1e-6f) {
+		// ゼロ割防止：回転なしにする
+		return IdentityQuaternion();
+	}
+
+	result.w = quaternion.w / n;
+	result.x = quaternion.x / n;
+	result.y = quaternion.y / n;
+	result.z = quaternion.z / n;
+
+	return result;
+}
+
+Quaternion Inverse(const Quaternion& quaternion)
+{
+	float n2 =
+		quaternion.w * quaternion.w +
+		quaternion.x * quaternion.x +
+		quaternion.y * quaternion.y +
+		quaternion.z * quaternion.z;
+
+	if (n2 < 1e-6f) {
+		// 逆が取れんときは回転なし
+		return IdentityQuaternion();
+	}
+
+	Quaternion result;
+	result.w = quaternion.w / n2;
+	result.x = -quaternion.x / n2;
+	result.y = -quaternion.y / n2;
+	result.z = -quaternion.z / n2;
+
 	return result;
 }
 

@@ -6,6 +6,8 @@
 
 void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label);
 
+void QuaternionScreenPrintf(int x, int y, const Quaternion&	quaternion, const char* label);
+
 void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label);
 
 
@@ -266,6 +268,20 @@ Matrix4x4 MakePerspectiveFovMatrix(float fovY, float a, float zn, float zf);
 /// <returns>ビューポート行列</returns>
 Matrix4x4 MakeViewPortMatrix(float width, float height, float left, float top, float minD, float maxD);
 
+
+//クォータニオン
+
+Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs);
+
+Quaternion IdentityQuaternion();
+
+Quaternion Conjugats(const Quaternion& quaternion);
+
+float Norm(const Quaternion& quaternion);
+
+Quaternion Normalize(const Quaternion& quaternion);
+
+Quaternion Inverse(const Quaternion& quaternion);
 
 //平面//
 
