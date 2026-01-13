@@ -29,10 +29,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Vector3 from0 = Normalize(Vector3{ 1.0f,0.7f,0.5f });
 	Vector3 to0 = -from0;
-	Vector3 from1 = Normalize(Vector3{ -0.6f,0.9f,9.2f });
+	Vector3 from1 = Normalize(Vector3{ -0.6f,0.9f,0.2f });
 	Vector3 to1 = Normalize(Vector3{ 0.4f,0.7f,-0.5f });
 	Matrix4x4 rotateMatrix0 = DirectionToDirection(
-		Normalize(Vector3{1.0f,0.0f,0.0f}),Normalize(Vector3{-1.0f,0.0f,0.0f})
+		Normalize(Vector3{ 1.0f,0.0f,0.0f }), Normalize(Vector3{ -1.0f,0.0f,0.0f })
 	);
 	Matrix4x4 rotateMatrix1 = DirectionToDirection(from0, to0);
 	Matrix4x4 rotateMatrix2 = DirectionToDirection(from1, to1);
@@ -62,8 +62,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		MatrixScreenPrintf(0, 0, rotateMatrix0, "rotateMatrix0");
-		MatrixScreenPrintf(0, 0, rotateMatrix1, "rotateMatrix1");
-		MatrixScreenPrintf(0, 0, rotateMatrix2, "rotateMatrix2");
+		MatrixScreenPrintf(0, 20 * 5, rotateMatrix1, "rotateMatrix1");
+		MatrixScreenPrintf(0, 20 * 10, rotateMatrix2, "rotateMatrix2");
 
 		///
 		/// ↑描画処理ここまで

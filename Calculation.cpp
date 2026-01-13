@@ -4,6 +4,7 @@
 #include <cmath>
 #include "assert.h"
 #include "Collision.h"
+#include <algorithm>
 
 
 
@@ -133,6 +134,10 @@ Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t)
 	vector.y = (1 - t) * v1.y + t * v2.y;
 	vector.z = (1 - t) * v1.z + t * v2.z;
 	return vector;
+}
+
+float Abs(float x) {
+	return (x < 0.0f) ? -x : x;
 }
 
 
@@ -376,24 +381,37 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle)
 
 }
 
-Matrix4x4 DirectionToDirection(Vector3& from, Vector3& to) {
-	Matrix4x4 matrix;
-	Vector3 n = Normalize(Cross(from, to));
-	float cos = Dot(from, to);
-	float sin = Length(Cross(from, to));;
-	matrix.m[0][0] = n.x * n.x * (1 - cos) + cos;
-	matrix.m[0][1] = n.x * n.y * (1 - cos) + n.z * sin;
-	matrix.m[0][2] = n.x * n.z * (1 - cos) - n.y * sin;
+Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to) {
 
-	matrix.m[1][0] = n.x * n.y * (1 - cos) + n.z * sin;
-	matrix.m[1][1] = n.y * n.y * (1 - cos) + cos;
-	matrix.m[1][2] = n.y * n.z * (1 - cos) + n.x * sin;
+	const float EPS = 1e-6f;
 
-	matrix.m[2][0] = n.x * n.z * (1 - cos) + n.y * sin;
-	matrix.m[2][1] = n.y * n.z * (1 - cos) + n.x * sin;
-	matrix.m[2][2] = n.z * n.z * (1 - cos) + cos;
+	if (Length(from) < EPS || Length(to) < EPS) {
+		return IdentityMatrix();
+	}
 
-	return matrix;
+	Vector3 f = Normalize(from);
+	Vector3 t = Normalize(to);
+
+	float cos = Dot(f, t);
+	
+	cos = std::clamp(cos, -1.0f, 1.0f);
+
+	if (cos > 1.0f - EPS) {
+		return IdentityMatrix();
+	}
+	if (cos < -1.0f + EPS) {
+		Vector3 axis = Cross(f, Vector3{ 0.0f,0.0f,1.0f });
+		if (Length(axis) < EPS) {
+			axis = Cross(f, Vector3({ 0.0f,1.0f,0.0f }));
+		}
+		axis = Normalize(axis);
+		return MakeRotateAxisAngle(axis, 3.14f);
+	}
+
+	Vector3 axis = Normalize(Cross(f, t));
+	float angle = std::acos(cos);
+	return MakeRotateAxisAngle(axis, angle);
+
 }
 
 

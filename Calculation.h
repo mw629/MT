@@ -61,7 +61,7 @@ Vector3 Multiply(Vector3 v, float s);
 /// </summary>
 /// <param name="v">ベクトル</param>
 /// <returns>ベクトルの長さ</returns>
-float Lengeh(Vector3 v);
+float Length(Vector3 v);
 
 /// <summary>
 /// この関数は、ベクトルを正規化します。
@@ -109,6 +109,9 @@ Vector3 ClosestPoint(const Vector3& point, const Segment& segment);
 /// <param name="t"></param>
 /// <returns></returns>
 Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
+
+
+float Abs(float x);
 
 //行列の計算
 

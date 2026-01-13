@@ -3,7 +3,7 @@
 
 bool IsCollision(const Sphere& sphere1, const Sphere& sphere2) {
 
-	float distance = Lengeh(sphere2.center - sphere1.center);
+	float distance = Length(sphere2.center - sphere1.center);
 
 	if (distance <= sphere1.radius + sphere2.radius) {
 		return true;
@@ -72,7 +72,7 @@ bool IsCollision(const AABB& aabb, const Sphere& sphere) {
 	closetPoint.y = { std::clamp(sphere.center.y,aabb.min.y,aabb.max.y) };
 	closetPoint.z = { std::clamp(sphere.center.z,aabb.min.z,aabb.max.z) };
 
-	float distance = Lengeh(closetPoint - sphere.center);
+	float distance = Length(closetPoint - sphere.center);
 
 	if (distance <= sphere.radius) {
 		return true;
