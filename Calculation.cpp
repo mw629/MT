@@ -374,7 +374,7 @@ Matrix4x4 Rotation(Vector3 angle)
 
 Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle)
 {
-	Matrix4x4 matrix=IdentityMatrix();
+	Matrix4x4 matrix = IdentityMatrix();
 	matrix.m[0][0] = axis.x * axis.x * (1 - cos(angle)) + cos(angle);
 	matrix.m[0][1] = axis.x * axis.y * (1 - cos(angle)) + axis.z * sin(angle);
 	matrix.m[0][2] = axis.x * axis.z * (1 - cos(angle)) - axis.y * sin(angle);
@@ -403,7 +403,7 @@ Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to) {
 	Vector3 t = Normalize(to);
 
 	float cos = Dot(f, t);
-	
+
 	cos = std::clamp(cos, -1.0f, 1.0f);
 
 	if (cos > 1.0f - EPS) {
@@ -538,7 +538,7 @@ Quaternion IdentityQuaternion()
 	return result;
 }
 
-Quaternion Conjugats(const Quaternion& quaternion)
+Quaternion Conjugate(const Quaternion& quaternion)
 {
 	Quaternion result;
 
@@ -600,6 +600,74 @@ Quaternion Inverse(const Quaternion& quaternion)
 	return result;
 }
 
+Quaternion MakeRotateAxisIngleQuternion(const Vector3& axis, float angle)
+{
+	Quaternion q;
+
+	Vector3 n = Normalize(axis);   // 回転軸は正規化するとよ
+	float half = angle * 0.5f;
+	float s = sinf(half);
+
+	q.x = n.x * s;
+	q.y = n.y * s;
+	q.z = n.z * s;
+	q.w = cosf(half);
+
+	return q;
+}
+
+Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion)
+{
+	Quaternion v;
+	v.x = vector.x;
+	v.y = vector.y;
+	v.z = vector.z;
+	v.w = 0.0f;
+
+	Quaternion q = quaternion;
+	Quaternion qInv = Conjugate(q); // 正規化済み前提たい
+
+	Quaternion r = Multiply(q, Multiply(v, qInv));
+
+	return Vector3{ r.x, r.y, r.z };
+}
+
+Matrix4x4 MakeRotateMatrix(const Quaternion& q)
+{
+	Matrix4x4 m{};
+
+	float xx = q.x * q.x;
+	float yy = q.y * q.y;
+	float zz = q.z * q.z;
+	float xy = q.x * q.y;
+	float xz = q.x * q.z;
+	float yz = q.y * q.z;
+	float wx = q.w * q.x;
+	float wy = q.w * q.y;
+	float wz = q.w * q.z;
+
+	m.m[0][0] = 1.0f - 2.0f * (yy + zz);
+	m.m[0][1] = 2.0f * (xy + wz);
+	m.m[0][2] = 2.0f * (xz - wy);
+	m.m[0][3] = 0.0f;
+
+	m.m[1][0] = 2.0f * (xy - wz);
+	m.m[1][1] = 1.0f - 2.0f * (xx + zz);
+	m.m[1][2] = 2.0f * (yz + wx);
+	m.m[1][3] = 0.0f;
+
+	m.m[2][0] = 2.0f * (xz + wy);
+	m.m[2][1] = 2.0f * (yz - wx);
+	m.m[2][2] = 1.0f - 2.0f * (xx + yy);
+	m.m[2][3] = 0.0f;
+
+	m.m[3][0] = 0.0f;
+	m.m[3][1] = 0.0f;
+	m.m[3][2] = 0.0f;
+	m.m[3][3] = 1.0f;
+
+	return m;
+}
 Vector3 Perpendicular(const Vector3& vector)
 {
 	if (vector.x != 0.0f || vector.y != 0.0f) {
